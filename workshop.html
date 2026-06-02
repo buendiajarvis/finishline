@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Workshop — Aiworx4me</title>
+  <meta name="description" content="Free 2-hour hands-on AI workshop for job seekers. Learn to use ChatGPT, Claude, and AI tools for resumes, interviews, and job search.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       FINISHLINE DESIGN TOKENS — from DESIGN.md
+       ============================================================ */
+    :root {
+      --surface: #0c1324;
+      --surface-dim: #0c1324;
+      --surface-bright: #33394c;
+      --surface-container-lowest: #070d1f;
+      --surface-container-low: #151b2d;
+      --surface-container: #191f31;
+      --surface-container-high: #23293c;
+      --surface-container-highest: #2e3447;
+
+      --on-surface: #dce1fb;
+      --on-surface-variant: #d0d8f0;
+
+      --inverse-surface: #dce1fb;
+      --inverse-on-surface: #2a3043;
+
+      --outline: #849495;
+      --outline-variant: #3b494b;
+
+      --surface-tint: #00dbe9;
+      --primary: #dbfcff;
+      --on-primary: #00363a;
+      --primary-container: #00f0ff;
+      --on-primary-container: #006970;
+      --inverse-primary: #006970;
+
+      --secondary: #b7c8e1;
+      --on-secondary: #213145;
+      --secondary-container: #3a4a5f;
+      --on-secondary-container: #a9bad3;
+
+      --tertiary: #f5f5ff;
+      --on-tertiary: #283044;
+      --tertiary-container: #d1d9f3;
+      --on-tertiary-container: #575e75;
+
+      --error: #ffb4ab;
+      --on-error: #690005;
+
+      --background: #0c1324;
+      --on-background: #dce1fb;
+      --surface-variant: #2e3447;
+
+      --ff-display: 'Hanken Grotesk', system-ui, sans-serif;
+      --ff-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+      --fs-display-lg: 48px;
+      --fs-display-lg-mobile: 32px;
+      --fs-headline-md: 24px;
+      --fs-body-md: 16px;
+      --fs-mono-label: 12px;
+      --fs-mono-data: 14px;
+
+      --lh-display-lg: 1.1;
+      --lh-headline-md: 1.3;
+      --lh-body-md: 1.6;
+      --lh-mono-label: 1.5;
+      --lh-mono-data: 1.4;
+
+      --ls-display-lg: -0.02em;
+      --ls-headline-md: -0.01em;
+      --ls-mono-label: 0.05em;
+      --ls-body-md: 0em;
+      --ls-mono-data: 0em;
+
+      --unit: 4px;
+      --gutter: 24px;
+      --margin-desktop: 64px;
+      --margin-mobile: 20px;
+      --container-max: 1440px;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+      --space-20: 80px;
+      --space-24: 96px;
+
+      --glow-cyan: 0 0 15px rgba(0, 219, 233, 0.08);
+      --glow-cyan-strong: 0 0 30px rgba(0, 219, 233, 0.15);
+      --glow-cyan-text: 0 0 8px rgba(0, 240, 255, 0.3);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body {
+      background: var(--background);
+      color: var(--on-surface);
+      font-family: var(--ff-display);
+      font-size: var(--fs-body-md);
+      font-weight: 400;
+      line-height: var(--lh-body-md);
+      letter-spacing: var(--ls-body-md);
+      overflow-x: hidden;
+    }
+
+    .container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--margin-desktop); }
+    .section { padding: var(--space-24) 0; }
+    .section-label {
+      font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600;
+      line-height: var(--lh-mono-label); letter-spacing: var(--ls-mono-label);
+      color: var(--primary); text-transform: none; margin-bottom: var(--space-4); display: block;
+    }
+    .mono-data {
+      font-family: var(--ff-mono); font-size: var(--fs-mono-data); font-weight: 400;
+      line-height: var(--lh-mono-data); letter-spacing: var(--ls-mono-data);
+    }
+
+    /* NAV */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(12, 19, 36, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    .nav-inner { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--margin-desktop); display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .nav-brand { display: flex; align-items: center; gap: var(--space-3); text-decoration: none; }
+    .nav-logo { width: 8px; height: 8px; background: var(--primary-container); box-shadow: 0 0 12px rgba(0, 240, 255, 1); }
+    .nav-name { font-family: var(--ff-mono); font-size: var(--fs-mono-data); font-weight: 600; color: var(--on-surface); letter-spacing: var(--ls-mono-label); text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); list-style: none; }
+    .nav-links a {
+      font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600;
+      letter-spacing: var(--ls-mono-label); color: var(--on-surface-variant); text-decoration: none; text-transform: uppercase; transition: color 0.15s ease;
+    }
+    .nav-links a:hover { color: var(--primary-container); }
+    .nav-cta, .nav-link-active {
+      font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600;
+      letter-spacing: var(--ls-mono-label); color: var(--on-primary); background: var(--primary-container);
+      padding: var(--space-2) var(--space-4); text-decoration: none; text-transform: uppercase; transition: box-shadow 0.2s ease;
+    }
+    .nav-link-active { box-shadow: var(--glow-cyan-strong); }
+
+    /* HERO */
+    .hero {
+      padding-top: calc(56px + var(--space-20)); padding-bottom: var(--space-12);
+      background: var(--surface-container-low); border-bottom: 1px solid var(--outline-variant);
+    }
+.hero-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  opacity: 0.30;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 19, 36, 0.3) 0%,
+    rgba(12, 19, 36, 0.7) 60%,
+    var(--background) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+    .hero-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gutter); position: relative; z-index: 2; }
+    .hero-content { grid-column: 1 / 9; display: flex; flex-direction: column; gap: var(--space-6); }
+    .hero-title {
+      font-family: var(--ff-display); font-size: var(--fs-display-lg); font-weight: 700;
+      line-height: var(--lh-display-lg); letter-spacing: var(--ls-display-lg);
+    }
+    .hero-title span { color: var(--primary-container); text-shadow: var(--glow-cyan-text); }
+    .hero-subtitle {
+      font-size: 18px; font-weight: 400; line-height: 1.7;
+      color: var(--on-surface-variant); font-weight: 500; max-width: 580px;
+    }
+    .hero-panel {
+      grid-column: 9 / 13; background: var(--surface-container-low); border: 1px solid var(--outline-variant);
+      padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); position: relative;
+    }
+    .hero-panel::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 2px; background: var(--primary-container); }
+    .hero-panel::after { content: ''; position: absolute; bottom: 0; right: 0; width: 2px; height: 2px; background: var(--primary-container); }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; }
+    .panel-title {
+      font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600;
+      letter-spacing: var(--ls-mono-label); color: var(--primary); text-transform: uppercase;
+    }
+    .panel-dot { width: 6px; height: 6px; background: var(--primary-container); box-shadow: 0 0 6px rgba(0, 240, 255, 0.5); animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .panel-status { display: flex; align-items: center; gap: 6px; font-family: var(--ff-mono); font-size: 10px; color: var(--primary-container); }
+    .panel-divider { height: 1px; background: var(--outline-variant); }
+    .panel-row { display: flex; justify-content: space-between; align-items: center; }
+    .panel-label { font-family: var(--ff-mono); font-size: 11px; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: var(--ls-mono-label); font-weight: 500; }
+    .panel-value { font-family: var(--ff-mono); font-size: var(--fs-mono-data); color: var(--on-surface); }
+    .panel-value.highlight { color: var(--primary-container); }
+    .panel-value.free { color: var(--primary-container); font-weight: 600; }
+
+    /* INFO GRID */
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); }
+    .info-section h2 {
+      font-family: var(--ff-display); font-size: var(--fs-headline-md); font-weight: 600;
+      line-height: var(--lh-headline-md); letter-spacing: var(--ls-headline-md); margin-bottom: var(--space-6);
+    }
+    .info-section p { color: var(--on-surface-variant); font-weight: 500; line-height: 1.7; }
+
+    /* MODULES */
+    .modules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+    .module-card {
+      background: var(--surface-container-low); border: 1px solid var(--outline-variant);
+      padding: var(--space-6); position: relative; display: flex; flex-direction: column; gap: var(--space-2);
+    }
+    .module-card::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 2px; background: var(--primary-container); }
+    .module-time { font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600; letter-spacing: var(--ls-mono-label); color: var(--primary); text-transform: uppercase; }
+    .module-title { font-family: var(--ff-display); font-size: 18px; font-weight: 600; color: var(--on-surface); }
+    .module-desc { font-size: 14px; color: var(--on-surface-variant); font-weight: 500; line-height: 1.6; }
+
+    /* TIMELINE */
+    .timeline { margin-top: var(--space-8); }
+    .timeline-item { display: flex; gap: var(--space-6); padding-bottom: var(--space-6); }
+    .timeline-dot { position: relative; flex-shrink: 0; width: 12px; height: 12px; margin-top: 4px; }
+    .timeline-dot::before { content: ''; position: absolute; width: 8px; height: 8px; background: var(--primary-container); top: 2px; left: 2px; }
+    .timeline-dot.active::before { border-radius: 50%; box-shadow: 0 0 8px rgba(0, 240, 255, 0.5); }
+    .timeline-item::after { content: ''; position: absolute; left: 5px; width: 1px; height: calc(100% - var(--space-6) - 12px); background: var(--outline-variant); }
+    .timeline-item:last-child::after { display: none; }
+    .timeline-item { position: relative; }
+    .timeline-content h4 { font-family: var(--ff-display); font-size: 16px; font-weight: 600; color: var(--on-surface); margin-bottom: 2px; }
+    .timeline-content p { font-size: 14px; color: var(--on-surface-variant); font-weight: 500; }
+
+    /* PROMPTS SECTION */
+    .prompt-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+    .prompt-card {
+      background: var(--surface-container-low); border: 1px solid var(--outline-variant);
+      padding: var(--space-6); position: relative;
+    }
+    .prompt-card::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 2px; background: var(--primary-container); }
+    .prompt-card-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: var(--space-3); }
+    .prompt-card-header:hover .prompt-toggle { color: var(--primary-container); }
+    .prompt-card-header h3 { font-family: var(--ff-display); font-size: 16px; font-weight: 600; color: var(--on-surface); }
+    .prompt-tag { font-family: var(--ff-mono); font-size: 10px; font-weight: 600; letter-spacing: var(--ls-mono-label); color: var(--primary); text-transform: uppercase; padding: 2px 6px; background: rgba(0, 240, 255, 0.25); border-radius: 2px; }
+    .prompt-body { display: none; }
+    .prompt-body.open { display: block; }
+    .prompt-code {
+      background: var(--surface-container-lowest); border: 1px solid var(--outline-variant);
+      padding: var(--space-4); font-family: var(--ff-mono); font-size: 13px;
+      color: var(--on-surface-variant); line-height: 1.6; white-space: pre-wrap; overflow-x: auto;
+      margin-bottom: var(--space-3);
+    }
+    .prompt-code .placeholder { color: var(--outline); font-style: italic; }
+    .prompt-tip { font-size: 13px; color: var(--outline); line-height: 1.5; }
+
+    /* FORM */
+    .registration { background: var(--surface-container-low); border-top: 1px solid var(--outline-variant); border-bottom: 1px solid var(--outline-variant); }
+    .reg-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gutter); }
+    .reg-content { grid-column: 1 / 7; display: flex; flex-direction: column; gap: var(--space-6); }
+    .reg-content h2 {
+      font-family: var(--ff-display); font-size: var(--fs-headline-md); font-weight: 600;
+      line-height: var(--lh-headline-md); letter-spacing: var(--ls-headline-md);
+    }
+    .reg-content p { color: var(--on-surface-variant); font-weight: 500; line-height: 1.7; max-width: 480px; }
+    .reg-panel {
+      grid-column: 7 / 13; background: var(--surface-container-low); border: 1px solid var(--outline-variant);
+      padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4);
+    }
+    .booking-form { display: flex; flex-direction: column; gap: var(--space-4); }
+    .form-field { display: flex; flex-direction: column; gap: var(--space-1); }
+    .form-label { font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600; letter-spacing: var(--ls-mono-label); color: var(--on-surface-variant); text-transform: uppercase; }
+    .form-input {
+      font-family: var(--ff-display); font-size: var(--fs-body-md); color: var(--on-surface);
+      background: var(--surface-container-lowest); border: 1px solid var(--outline-variant);
+      padding: var(--space-3) var(--space-4); outline: none; transition: border-color 0.2s ease; width: 100%;
+    }
+    .form-input:focus { border-color: var(--primary-container); }
+    .form-input::placeholder { color: var(--outline); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .form-field.full { grid-column: 1 / -1; }
+
+    .form-submit {
+      display: inline-flex; align-items: center; gap: var(--space-2); justify-content: center;
+      font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600;
+      letter-spacing: var(--ls-mono-label); color: var(--on-primary); background: var(--primary-container);
+      padding: var(--space-4) var(--space-8); border: none; cursor: pointer; text-transform: uppercase;
+      transition: box-shadow 0.2s ease;
+    }
+    .form-submit:hover { box-shadow: var(--glow-cyan-strong); }
+    .form-submit:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+    .form-submit.loading { animation: pulse-dot 1s ease-in-out infinite; opacity: 0.7; }
+
+    /* FOOTER */
+    .footer { padding: var(--space-10) 0; border-top: 1px solid var(--outline-variant); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; }
+    .footer-brand { display: flex; align-items: center; gap: var(--space-2); font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600; letter-spacing: var(--ls-mono-label); color: var(--on-surface-variant); text-transform: uppercase; }
+    .footer-dot { width: 6px; height: 6px; background: var(--primary-container); }
+    .footer-links { display: flex; gap: var(--space-8); list-style: none; }
+    .footer-links a { font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600; letter-spacing: var(--ls-mono-label); color: var(--on-surface-variant); text-decoration: none; text-transform: uppercase; transition: color 0.15s ease; }
+    .footer-links a:hover { color: var(--primary-container); }
+    .footer-location { font-family: var(--ff-mono); font-size: var(--fs-mono-label); font-weight: 600; letter-spacing: var(--ls-mono-label); color: var(--on-surface-variant); text-transform: uppercase; }
+
+    @media (max-width: 1024px) {
+      .container { padding: 0 var(--space-6); }
+      .hero-content { grid-column: 1 / -1; }
+      .hero-panel { grid-column: 1 / -1; margin-top: var(--space-8); }
+      .info-grid { grid-template-columns: 1fr; }
+      .modules-grid { grid-template-columns: 1fr; }
+      .prompt-grid { grid-template-columns: 1fr; }
+      .reg-content { grid-column: 1 / -1; }
+      .reg-panel { grid-column: 1 / -1; margin-top: var(--space-6); }
+    }
+    @media (max-width: 640px) {
+      :root { --fs-display-lg: 32px; }
+      .container { padding: 0 var(--margin-mobile); }
+      .nav-links { display: none; }
+      .hero { padding-top: calc(56px + var(--space-10)); padding-bottom: var(--space-8); }
+      .module-card { padding: var(--space-4); }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; gap: var(--space-6); text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; gap: var(--space-4); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo"></div>
+      <span class="nav-name">Aiworx4me</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="#curriculum">Curriculum</a></li>
+      <li><a href="#prompts">Prompts</a></li>
+      <li><a href="#register" class="nav-link-active">Register</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+  <video class="hero-video" autoplay loop muted playsinline>
+    <source src="https://imagine-public.x.ai/imagine-public/share-videos/f5167891-3d07-4a37-9a92-f2b63ee29007.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay"></div>
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <span class="section-label">AI WORKSHOP // FREE</span>
+        <h1 class="hero-title">Get hired faster with <span>AI</span>. No experience needed.</h1>
+        <p class="hero-subtitle">
+          A free 2-hour hands-on workshop showing you how to use free AI tools — ChatGPT, Claude, Gemini —
+          to write resumes, cover letters, prep for interviews, and find jobs. You leave with a tailored resume
+          and a plan to use these tools every week of your job search.
+        </p>
+        <div style="display:flex;gap:var(--space-6);padding-top:var(--space-4)">
+          <a href="#register" class="nav-cta" style="display:inline-flex;align-items:center;padding:var(--space-3) var(--space-6);cursor:pointer;border-radius:0">Reserve Your Spot →</a>
+          <a href="#curriculum" style="color:var(--on-surface-variant);text-decoration:none;font-family:var(--ff-mono);font-size:var(--fs-mono-label);display:flex;align-items:center;text-transform:uppercase;letter-spacing:var(--ls-mono-label)">View Curriculum ↓</a>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="panel-header">
+          <span class="panel-title">Workshop Details</span>
+          <span class="panel-status"><span class="panel-dot"></span> OPEN</span>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="panel-row"><span class="panel-label">Duration</span><span class="panel-value">2 Hours</span></div>
+        <div class="panel-row"><span class="panel-label">Format</span><span class="panel-value">Live + Hands-On</span></div>
+        <div class="panel-row"><span class="panel-label">Prerequisites</span><span class="panel-value">None</span></div>
+        <div class="panel-row"><span class="panel-label">Bring</span><span class="panel-value">Phone + Resume</span></div>
+        <div class="panel-divider"></div>
+        <div class="panel-row"><span class="panel-label">Cost</span><span class="panel-value free">FREE</span></div>
+        <div class="panel-row"><span class="panel-label">Spots Available</span><span class="panel-value highlight">30</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO + CURRICULUM -->
+<section class="section" id="curriculum">
+  <div class="container">
+    <div class="info-grid">
+      <!-- LEFT: Curriculum -->
+      <div class="info-section">
+        <span class="section-label">SECTION 01 // CURRICULUM</span>
+        <h2>What you'll learn in 2 hours.</h2>
+        <p style="margin-bottom:var(--space-8)">Every module is hands-on. You'll use real AI tools on real job descriptions. By the end, you'll have a tailored resume, a cover letter, and a weekly system for your job hunt.</p>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h4>0:00–0:08 — Opening: What AI Actually Is</h4>
+              <p>Demystify AI. Kill the fear. Understand what these tools can and can't do for you.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h4>0:08–0:30 — Module 1: Resume Tailoring</h4>
+              <p>Feed a job description + your resume to AI. Get a targeted version in 60 seconds. Learn how to clean it up so it sounds like you.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h4>0:30–0:50 — Module 2: Cover Letters</h4>
+              <p>Generate a cover letter that doesn't sound like AI wrote it. Learn the "make it shorter" trick that changes everything.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h4>0:50–1:05 — Module 3: Job Search Optimization</h4>
+              <p>Extract hidden requirements. Find jobs you didn't know you qualified for. Use AI to beat the ATS filter.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h4>1:05–1:30 — Module 4: Interview Preparation</h4>
+              <p>Generate 10 likely interview questions from the actual job description. Practice with a mock interview. Get feedback on your answers.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h4>1:30–1:45 — Module 5: Skills Gap Analysis</h4>
+              <p>Find what you're missing. Get free resources to close the gap. Learn how to address it in an interview without lying.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h4>1:45–2:00 — Closing: Your Weekly Job Search System</h4>
+              <p>Leave with a repeatable weekly workflow: Sunday job search, Monday applications, interview prep before each call.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: What You Get -->
+      <div class="info-section">
+        <span class="section-label">SECTION 02 // OUTCOMES</span>
+        <h2>What you leave with.</h2>
+
+        <div class="modules-grid" style="margin-top:var(--space-6)">
+          <div class="module-card">
+            <span class="module-time">OUTPUT 01</span>
+            <h3 class="module-title">Tailored Resume</h3>
+            <p class="module-desc">A resume optimized for a real job you're targeting — with the right keywords for ATS filters.</p>
+          </div>
+          <div class="module-card">
+            <span class="module-time">OUTPUT 02</span>
+            <h3 class="module-title">Cover Letter</h3>
+            <p class="module-desc">A cover letter for that specific role that sounds like a thoughtful email, not machine-generated text.</p>
+          </div>
+          <div class="module-card">
+            <span class="module-time">OUTPUT 03</span>
+            <h3 class="module-title">Interview Questions</h3>
+            <p class="module-desc">10 likely questions from the actual job description — technical, behavioral, and curveball.</p>
+          </div>
+          <div class="module-card">
+            <span class="module-time">OUTPUT 04</span>
+            <h3 class="module-title">Skills Gap Report</h3>
+            <p class="module-desc">What you're missing for the job, how to close the gap in 2 weeks, and free resources to learn.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:var(--space-8);padding:var(--space-6);background:var(--surface-container-low);border:1px solid var(--outline-variant);position:relative">
+          <div style="position:absolute;top:0;left:0;width:2px;height:2px;background:var(--primary-container)"></div>
+          <h3 style="font-family:var(--ff-mono);font-size:var(--fs-mono-label);font-weight:500;letter-spacing:var(--ls-mono-label);color:var(--surface-tint);text-transform:uppercase;margin-bottom:var(--space-4)">After the Workshop</h3>
+          <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+            <div class="panel-row"><span class="panel-label">Day 0</span><span class="panel-value">All prompts emailed to you</span></div>
+            <div class="panel-row"><span class="panel-label">Day 7</span><span class="panel-value">Quick check-in — what worked?</span></div>
+            <div class="panel-row"><span class="panel-label">Day 30</span><span class="panel-value">Follow-up: did you get interviews?</span></div>
+          </div>
+        </div>
+
+        <a href="#prompts" style="display:inline-flex;align-items:center;gap:var(--space-2);color:var(--primary-container);text-decoration:none;font-family:var(--ff-mono);font-size:var(--fs-mono-label);letter-spacing:var(--ls-mono-label);text-transform:uppercase;margin-top:var(--space-8)">
+          View all 9 prompts ↓
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROMPTS -->
+<section class="section" id="prompts" style="background:var(--surface-container-low);border-top:1px solid var(--outline-variant);border-bottom:1px solid var(--outline-variant)">
+  <div class="container">
+    <span class="section-label">SECTION 03 // PROMPT LIBRARY</span>
+    <h2 style="font-family:var(--ff-display);font-size:var(--fs-headline-md);font-weight:600;line-height:var(--lh-headline-md);letter-spacing:var(--ls-headline-md);margin-bottom:var(--space-2)">The actual prompts — free to copy.</h2>
+    <p style="color:var(--on-surface-variant);margin-bottom:var(--space-4)">These are the exact prompts we use in the workshop. Copy, paste, adapt. They work in ChatGPT, Claude, Gemini, and any other chat-based AI.</p>
+
+    <div class="prompt-grid">
+
+      <!-- Prompt 1 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>Resume Tailoring</h3>
+          <span class="prompt-tag">Most Used</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">I'm applying for this job:
+
+<span class="placeholder">[PASTE JOB DESCRIPTION HERE]</span>
+
+Here's my current resume:
+
+<span class="placeholder">[PASTE YOUR RESUME HERE]</span>
+
+Rewrite my resume to target this specific role. Keep it truthful — don't invent experience I don't have. Reorganize and rephrase my experience to highlight what this employer cares about. Use the same keywords from the job description. Format it cleanly, ready to copy-paste.</div>
+          <p class="prompt-tip">After: remove "I am excited to", add one number, read it aloud — if it doesn't sound like you, change those parts.</p>
+        </div>
+      </div>
+
+      <!-- Prompt 2 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>Cover Letter</h3>
+          <span class="prompt-tag">Essential</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">Write a cover letter for this job:
+
+<span class="placeholder">[PASTE JOB DESCRIPTION]</span>
+
+About me: <span class="placeholder">[WRITE 2–3 SENTENCES ABOUT YOUR BACKGROUND IN YOUR OWN WORDS]</span>
+
+Rules:
+- Keep it under 200 words
+- No buzzwords (synergy, passionate, leverage, etc.)
+- Open with something specific about THIS company
+- Close with a clear next step
+
+Write it like a thoughtful email, not a formal letter.</div>
+          <p class="prompt-tip">Then ask: "Make it shorter. Cut 30%." Then ask: "Does this sound like a human wrote it?"</p>
+        </div>
+      </div>
+
+      <!-- Prompt 3 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>Decode Real Requirements</h3>
+          <span class="prompt-tag">Insight</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">Here's a job description:
+
+<span class="placeholder">[PASTE JOB DESCRIPTION]</span>
+
+What are they ACTUALLY looking for that isn't explicitly stated? What would make someone stand out from other applicants? List the unspoken requirements.</div>
+          <p class="prompt-tip">This reveals what the employer really cares about — often different from what the JD says.</p>
+        </div>
+      </div>
+
+      <!-- Prompt 4 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>Hidden Job Titles</h3>
+          <span class="prompt-tag">Discovery</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">I'm a <span class="placeholder">[YOUR CURRENT OR LAST JOB TITLE]</span> with experience in <span class="placeholder">[2–3 SKILLS]</span>. What are 5 job titles I might qualify for that I wouldn't think to search for?</div>
+          <p class="prompt-tip">Opens up job categories you never considered. Often uncovers higher-paying roles.</p>
+        </div>
+      </div>
+
+      <!-- Prompt 5 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>ATS Keyword Check</h3>
+          <span class="prompt-tag">Critical</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">Extract the top 10 keywords from this job description that an ATS (applicant tracking system) would look for. List them by importance. Then tell me which ones are missing from my resume:
+
+<span class="placeholder">[PASTE JOB DESCRIPTION]</span>
+<span class="placeholder">[PASTE YOUR RESUME]</span></div>
+          <p class="prompt-tip">This is the one that makes people gasp. Most resumes pass only 4 of 10 keywords without optimization.</p>
+        </div>
+      </div>
+
+      <!-- Prompt 6 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>Interview Question Generator</h3>
+          <span class="prompt-tag">Prep</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">I'm interviewing for this role:
+
+<span class="placeholder">[PASTE JOB DESCRIPTION]</span>
+
+Based on this job description, what are the 10 most likely interview questions? Include:
+- 3 technical/role-specific questions
+- 3 behavioral questions (tell me about a time when...)
+- 2 questions about my resume/background
+- 2 curveball questions they might throw
+
+For each question, explain what the interviewer is actually testing.</div>
+          <p class="prompt-tip">Print this list and practice out loud before every interview.</p>
+        </div>
+      </div>
+
+      <!-- Prompt 7 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>Mock Interview Practice</h3>
+          <span class="prompt-tag">Showstopper</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">You're a hiring manager interviewing me for <span class="placeholder">[JOB TITLE]</span> at <span class="placeholder">[COMPANY]</span>. Ask me one question at a time. After I respond, give me brief feedback on my answer, then ask the next question. Start with "Tell me about yourself."</div>
+          <p class="prompt-tip">Hardest version: "Now interview me as a skeptical hiring manager who isn't sure I'm qualified."</p>
+        </div>
+      </div>
+
+      <!-- Prompt 8 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>Skills Gap Analysis</h3>
+          <span class="prompt-tag">Growth</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">Here's my current resume:
+
+<span class="placeholder">[PASTE YOUR RESUME]</span>
+
+Here's the job I want:
+
+<span class="placeholder">[PASTE JOB DESCRIPTION]</span>
+
+What skills or experience am I missing? For each gap, tell me:
+1. How big a deal is it (dealbreaker vs. nice-to-have)?
+2. What free resource can I use to learn this in 2 weeks?
+3. How do I address this gap in an interview without lying?</div>
+          <p class="prompt-tip">AI gives you free learning paths. Don't skip the third point — addressing the gap in an interview is a skill.</p>
+        </div>
+      </div>
+
+      <!-- Prompt 9 -->
+      <div class="prompt-card">
+        <div class="prompt-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>Salary Research & Negotiation</h3>
+          <span class="prompt-tag">Advanced</span>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-code">I'm applying for <span class="placeholder">[JOB TITLE]</span> in <span class="placeholder">[CITY/REGION]</span> with <span class="placeholder">[X]</span> years of experience. What's a realistic salary range? What factors could push me toward the higher end? Give me a script for negotiating if they offer the lower end.</div>
+          <p class="prompt-tip">Always negotiate. AI gives you market data to support your ask. Never accept the first number.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION -->
+<section class="section registration" id="register">
+  <div class="container">
+    <div class="reg-grid">
+      <div class="reg-content">
+        <span class="section-label">SECTION 04 // REGISTER</span>
+        <h2>Reserve your spot.</h2>
+        <p>
+          Free. No prerequisites. Bring your resume and a job you want — or your phone and we'll help you find one.
+          Each workshop is 30 people. First come, first served.
+        </p>
+
+        <div style="display:flex;flex-direction:column;gap:var(--space-4);margin-top:var(--space-6)">
+          <div class="panel-row">
+            <div style="width:6px;height:6px;background:var(--primary-container);box-shadow:0 0 6px rgba(0,240,255,0.5);flex-shrink:0"></div>
+            <span class="panel-value">Location to be announced</span>
+          </div>
+          <div class="panel-row">
+            <div style="width:6px;height:6px;background:var(--primary-container);box-shadow:0 0 6px rgba(0,240,255,0.5);flex-shrink:0"></div>
+            <span class="panel-value">Next session: TBD — register for notification</span>
+          </div>
+          <div class="panel-row">
+            <div style="width:6px;height:6px;background:var(--outline);flex-shrink:0"></div>
+            <span style="color:var(--on-surface-variant);font-family:var(--ff-mono);font-size:var(--fs-mono-data)">Cost: FREE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-panel" id="booking-form-container">
+        <span class="panel-title">Workshop Registration</span>
+        <div class="panel-divider"></div>
+        <form action="/api/register" method="POST" class="booking-form" id="booking-form">
+          <input type="hidden" name="_csrf" value="">
+
+          <div class="form-field">
+            <label class="form-label" for="name">Full Name</label>
+            <input class="form-input" type="text" id="name" name="name" placeholder="Your full name" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="email">Email</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="you@email.com" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="phone">Phone (optional)</label>
+              <input class="form-input" type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="location">Preferred Location</label>
+              <select class="form-input" id="location" name="location" style="appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23849495' d='M6 8L1 3h10z'/%3E%3C/svg%3E&quot;);padding-right:32px">
+                <option value="" disabled selected>Select location…</option>
+                <option value="downtown-la">Downtown LA</option>
+                <option value="san-diego">San Diego</option>
+                <option value="fresno">Fresno</option>
+                <option value="san-francisco">San Francisco</option>
+                <option value="sacramento">Sacramento</option>
+                <option value="other">Other / Online</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="experience">AI Experience</label>
+              <select class="form-input" id="experience" name="experience" style="appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23849495' d='M6 8L1 3h10z'/%3E%3C/svg%3E&quot;);padding-right:32px">
+                <option value="" disabled selected>Select level…</option>
+                <option value="never">Never used AI</option>
+                <option value="once">Have tried it once or twice</option>
+                <option value="sometimes">Use it sometimes</option>
+                <option value="regularly">Use it regularly</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="message">What job are you looking for? (optional)</label>
+            <textarea class="form-input" id="message" name="message" placeholder="Briefly: what kind of job are you searching for, and where are you stuck?" rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="form-submit" id="form-submit-btn">Reserve My Spot →</button>
+        </form>
+
+        <div class="form-thanks" id="form-thanks" style="display:none;flex-direction:column;gap:var(--space-4);padding:var(--space-8);background:var(--surface-container-low);border:1px solid var(--outline-variant);text-align:center;align-items:center">
+          <div style="font-family:var(--ff-mono);font-size:32px;color:var(--primary-container)">◈</div>
+          <div style="font-family:var(--ff-display);font-size:var(--fs-headline-md);font-weight:600;color:var(--on-surface)">Registration Received</div>
+          <p style="font-size:var(--fs-body-md);color:var(--on-surface-variant);max-width:400px">Look for emails from phil@finishlinemsp.com with the workshop details, location, and prep materials. See you soon.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-dot"></div>
+        FINISHLINE
+      </div>
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#capabilities">Services</a></li>
+        <li><a href="/#engage">Contact</a></li>
+      </ul>
+      <span class="footer-location">San Francisco · New York · London · Taipei · Manila</span>
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script>
+document.getElementById('booking-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('form-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const data = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      location: document.getElementById('location').value,
+      experience: document.getElementById('experience').value
+    };
+
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      window.location.href = '/#thanks';
+    } else {
+      const err = await res.json().catch(() => ({}));
+      btn.disabled = false;
+      btn.textContent = 'Reserve My Spot →';
+      alert(err.error || 'Something went wrong. Please try again or email register@aiworx4me.com directly.');
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Reserve My Spot →';
+    alert('Network error. Please try again or email register@aiworx4me.com directly.');
+  }
+});
+
+if (window.location.hash === '#thanks') {
+  document.getElementById('booking-form').style.display = 'none';
+  document.getElementById('form-thanks').style.display = 'flex';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinishLine — AI Transformation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   FINISHLINE DESIGN TOKENS — from DESIGN.md
+   ============================================================ */
+:root {
+  /* Foundation */
+  --surface: #0c1324;
+  --surface-dim: #0c1324;
+  --surface-bright: #33394c;
+  --surface-container-lowest: #070d1f;
+  --surface-container-low: #151b2d;
+  --surface-container: #191f31;
+  --surface-container-high: #23293c;
+  --surface-container-highest: #2e3447;
+
+  /* On-surface (text) */
+  --on-surface: #dce1fb;
+  --on-surface-variant: #b9cacb;
+
+  /* Inverse */
+  --inverse-surface: #dce1fb;
+  --inverse-on-surface: #2a3043;
+
+  /* Outlines */
+  --outline: #849495;
+  --outline-variant: #3b494b;
+
+  /* Primary — Electric Cyan */
+  --surface-tint: #00dbe9;
+  --primary: #dbfcff;
+  --on-primary: #00363a;
+  --primary-container: #00f0ff;
+  --on-primary-container: #006970;
+  --inverse-primary: #006970;
+
+  /* Secondary — Steel Blue */
+  --secondary: #b7c8e1;
+  --on-secondary: #213145;
+  --secondary-container: #3a4a5f;
+  --on-secondary-container: #a9bad3;
+
+  /* Tertiary — Lavender */
+  --tertiary: #f5f5ff;
+  --on-tertiary: #283044;
+  --tertiary-container: #d1d9f3;
+  --on-tertiary-container: #575e75;
+
+  /* Error */
+  --error: #ffb4ab;
+  --on-error: #690005;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+
+  /* Fixed primaries */
+  --primary-fixed: #7df4ff;
+  --primary-fixed-dim: #00dbe9;
+  --on-primary-fixed: #002022;
+  --on-primary-fixed-variant: #004f54;
+  --secondary-fixed: #d3e4fe;
+  --secondary-fixed-dim: #b7c8e1;
+  --on-secondary-fixed: #0b1c30;
+  --on-secondary-fixed-variant: #38485d;
+  --tertiary-fixed: #dae2fd;
+  --tertiary-fixed-dim: #bec6e0;
+  --on-tertiary-fixed: #131b2e;
+  --on-tertiary-fixed-variant: #3f465c;
+
+  --background: #0c1324;
+  --on-background: #dce1fb;
+  --surface-variant: #2e3447;
+
+  /* Typography */
+  --ff-display: 'Hanken Grotesk', system-ui, sans-serif;
+  --ff-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --fs-display-lg: 48px;
+  --fs-display-lg-mobile: 32px;
+  --fs-headline-md: 24px;
+  --fs-body-md: 16px;
+  --fs-mono-label: 12px;
+  --fs-mono-data: 14px;
+
+  --lh-display-lg: 1.1;
+  --lh-display-lg-mobile: 1.2;
+  --lh-headline-md: 1.3;
+  --lh-body-md: 1.6;
+  --lh-mono-label: 1.5;
+  --lh-mono-data: 1.4;
+
+  --ls-display-lg: -0.02em;
+  --ls-display-lg-mobile: -0.01em;
+  --ls-headline-md: -0.01em;
+  --ls-mono-label: 0.05em;
+  --ls-body-md: 0em;
+  --ls-mono-data: 0em;
+
+  /* Spacing — 4px base unit */
+  --unit: 4px;
+  --gutter: 24px;
+  --margin-desktop: 64px;
+  --margin-mobile: 20px;
+  --container-max: 1440px;
+
+  /* Derived spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Glow */
+  --glow-cyan: 0 0 15px rgba(0, 219, 233, 0.08);
+  --glow-cyan-strong: 0 0 30px rgba(0, 219, 233, 0.15);
+  --glow-cyan-text: 0 0 8px rgba(0, 240, 255, 0.3);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: var(--ff-display);
+  font-size: var(--fs-body-md);
+  font-weight: 400;
+  line-height: var(--lh-body-md);
+  letter-spacing: var(--ls-body-md);
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+}
+
+.section {
+  padding: var(--space-24) 0;
+  position: relative;
+  z-index: 1;
+}
+
+.capabilities,
+.approach,
+.intel,
+.cases,
+.cta-section,
+.metrics {
+  position: relative;
+  z-index: 2;
+}
+
+.section-label {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  line-height: var(--lh-mono-label);
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+  display: block;
+}
+
+.mono-data {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  font-weight: 400;
+  line-height: var(--lh-mono-data);
+  letter-spacing: var(--ls-mono-data);
+}
+
+/* ============================================================
+   NAVIGATION — Glassmorphism Header
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(12, 19, 36, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.nav-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.nav-logo {
+  width: 8px;
+  height: 8px;
+  background: var(--primary-container);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+.nav-name {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  font-weight: 500;
+  color: var(--on-surface);
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary-container);
+}
+
+.nav-cta {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  padding: var(--space-2) var(--space-4);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: box-shadow 0.2s ease;
+}
+
+.nav-cta:hover {
+  box-shadow: var(--glow-cyan-strong);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  padding-top: calc(56px + var(--space-24));
+  padding-bottom: var(--space-16);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  opacity: 0.30;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 19, 36, 0.3) 0%,
+    rgba(12, 19, 36, 0.7) 60%,
+    var(--background) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content {
+  grid-column: 1 / 8;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.hero-eyebrow {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-display-lg);
+  font-weight: 700;
+  line-height: var(--lh-display-lg);
+  letter-spacing: var(--ls-display-lg);
+  color: var(--on-surface);
+}
+
+.hero-title span {
+  color: var(--primary-container);
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+  max-width: 540px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: var(--space-12);
+  padding-top: var(--space-4);
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.hero-stat-value {
+  font-family: var(--ff-mono);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--primary-container);
+  line-height: 1;
+}
+
+.hero-stat-label {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+/* Hero Data Panel (right side) */
+.hero-panel {
+  grid-column: 9 / 13;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: relative;
+}
+
+.hero-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: var(--primary-container);
+}
+
+.hero-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  height: 2px;
+  background: var(--primary-container);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-title {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.panel-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  color: var(--primary-container);
+}
+
+.panel-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--primary-container);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(0, 240, 255, 0.5); }
+  50% { opacity: 0.4; box-shadow: 0 0 12px rgba(0, 240, 255, 0.8); }
+}
+
+.panel-divider {
+  height: 1px;
+  background: var(--outline-variant);
+}
+
+.panel-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-label {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-mono-label);
+}
+
+.panel-value {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  color: var(--on-surface);
+}
+
+.panel-value.highlight {
+  color: var(--primary-container);
+}
+
+/* ============================================================
+   CAPABILITIES
+   ============================================================ */
+.capabilities {
+  padding: var(--space-24) 0;
+}
+
+.cap-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-12);
+}
+
+.cap-headline {
+  font-family: var(--ff-display);
+  font-size: var(--fs-headline-md);
+  font-weight: 600;
+  line-height: var(--lh-headline-md);
+  letter-spacing: var(--ls-headline-md);
+  color: var(--on-surface);
+  max-width: 500px;
+}
+
+.cap-body {
+  font-size: var(--fs-body-md);
+  color: var(--on-surface-variant);
+  max-width: 400px;
+}
+
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+}
+
+.cap-card {
+  grid-column: span 4;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: relative;
+  transition: border-color 0.2s ease;
+}
+
+.cap-card:hover {
+  border-color: var(--outline);
+}
+
+.cap-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: var(--primary-container);
+}
+
+.cap-card-icon {
+  font-family: var(--ff-mono);
+  font-size: 20px;
+  color: var(--primary-container);
+  line-height: 1;
+}
+
+.cap-card-num {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.cap-card-title {
+  font-family: var(--ff-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--on-surface);
+  line-height: 1.3;
+}
+
+.cap-card-desc {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   APPROACH — Timeline
+   ============================================================ */
+.approach {
+  padding: var(--space-24) 0;
+  background: var(--surface-container-lowest);
+}
+
+.approach-header {
+  margin-bottom: var(--space-16);
+}
+
+.approach-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-headline-md);
+  font-weight: 600;
+  line-height: var(--lh-headline-md);
+  letter-spacing: var(--ls-headline-md);
+  color: var(--on-surface);
+  max-width: 500px;
+}
+
+.approach-timeline {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+  position: relative;
+}
+
+.approach-timeline::before {
+  content: '';
+  position: absolute;
+  top: var(--space-5);
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--outline-variant);
+  grid-column: 1 / -1;
+}
+
+.approach-phase {
+  grid-column: span 3;
+  position: relative;
+  padding-top: var(--space-12);
+}
+
+.approach-phase::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--space-5) - 3px);
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--primary-container);
+}
+
+.approach-phase.active::before {
+  box-shadow: var(--glow-cyan);
+}
+
+.approach-phase-num {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+}
+
+.approach-phase-title {
+  font-family: var(--ff-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin-bottom: var(--space-2);
+}
+
+.approach-phase-desc {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   INTELLIGENCE FEED
+   ============================================================ */
+.intel {
+  padding: var(--space-24) 0;
+}
+
+.intel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-10);
+}
+
+.intel-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.intel-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-headline-md);
+  font-weight: 600;
+  line-height: var(--lh-headline-md);
+  letter-spacing: var(--ls-headline-md);
+  color: var(--on-surface);
+}
+
+.intel-status {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--primary-container);
+}
+
+.intel-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+}
+
+.intel-card {
+  grid-column: span 4;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: relative;
+}
+
+.intel-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: var(--primary-container);
+}
+
+.intel-card-tag {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.intel-card-metric {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  color: var(--primary-container);
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.intel-card-metric .number {
+  font-size: 36px;
+  font-weight: 500;
+}
+
+.intel-card-label {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-mono-label);
+}
+
+.intel-card-desc {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  line-height: 1.5;
+}
+
+/* Large intel card */
+.intel-card.large {
+  grid-column: span 6;
+  flex-direction: row;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.intel-card.large .intel-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.intel-card-viz {
+  width: 120px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.bar {
+  flex: 1;
+  background: var(--surface-tint);
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.bar.active {
+  opacity: 1;
+  background: var(--primary-container);
+}
+
+.bar:nth-child(1) { height: 40%; }
+.bar:nth-child(2) { height: 55%; }
+.bar:nth-child(3) { height: 30%; }
+.bar:nth-child(4) { height: 70%; }
+.bar:nth-child(5) { height: 45%; }
+.bar:nth-child(6) { height: 85%; }
+.bar:nth-child(7) { height: 60%; }
+.bar:nth-child(8) { height: 95%; }
+.bar:nth-child(9) { height: 75%; }
+.bar:nth-child(10) { height: 50%; }
+
+/* ============================================================
+   METRICS STRIP
+   ============================================================ */
+.metrics {
+  padding: var(--space-12) 0;
+  border-top: 1px solid var(--outline-variant);
+  border-bottom: 1px solid var(--outline-variant);
+  background: var(--surface-container-lowest);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+}
+
+.metric-item {
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.metric-value {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  font-weight: 500;
+  color: var(--primary-container);
+}
+
+.metric-label {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   CASE STUDIES
+   ============================================================ */
+.cases {
+  padding: var(--space-24) 0;
+}
+
+.cases-header {
+  margin-bottom: var(--space-12);
+}
+
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+}
+
+.case-card {
+  grid-column: span 6;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: relative;
+}
+
+.case-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: var(--primary-container);
+}
+
+.case-industry {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.case-title {
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--on-surface);
+  line-height: 1.3;
+}
+
+.case-desc {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  line-height: 1.6;
+}
+
+.case-results {
+  display: flex;
+  gap: var(--space-8);
+  padding-top: var(--space-2);
+}
+
+.case-result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.case-result-value {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  font-weight: 500;
+  color: var(--primary-container);
+}
+
+.case-result-label {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   FORM
+   ============================================================ */
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.form-field.full {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  font-family: var(--ff-display);
+  font-size: var(--fs-body-md);
+  color: var(--on-surface);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-3) var(--space-4);
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--primary-container);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--outline);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23849495' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  padding: var(--space-3) var(--space-6);
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  align-self: flex-start;
+  transition: box-shadow 0.2s ease;
+}
+
+.form-submit:hover {
+  box-shadow: var(--glow-cyan-strong);
+}
+
+.form-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.form-thanks {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-8);
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  text-align: center;
+  align-items: center;
+}
+
+.form-thanks.visible {
+  display: flex;
+}
+
+.form-thanks-icon {
+  font-family: var(--ff-mono);
+  font-size: 32px;
+  color: var(--primary-container);
+}
+
+.form-thanks-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-headline-md);
+  font-weight: 600;
+  line-height: var(--lh-headline-md);
+  color: var(--on-surface);
+}
+
+.form-thanks-desc {
+  font-size: var(--fs-body-md);
+  color: var(--on-surface-variant);
+  max-width: 400px;
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+.cta-section {
+  padding: var(--space-24) 0;
+  background: var(--surface-container-lowest);
+}
+
+.cta-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+}
+
+.cta-content {
+  grid-column: 1 / 8;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.cta-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-headline-md);
+  font-weight: 600;
+  line-height: var(--lh-headline-md);
+  letter-spacing: var(--ls-headline-md);
+  color: var(--on-surface);
+}
+
+.cta-desc {
+  font-size: var(--fs-body-md);
+  color: var(--on-surface-variant);
+  line-height: var(--lh-body-md);
+  max-width: 480px;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  padding: var(--space-3) var(--space-6);
+  text-decoration: none;
+  text-transform: uppercase;
+  align-self: flex-start;
+  transition: box-shadow 0.2s ease;
+}
+
+.cta-button:hover {
+  box-shadow: var(--glow-cyan-strong);
+}
+
+.cta-panel {
+  grid-column: 9 / 13;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.cta-panel-header {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.cta-panel-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  color: var(--on-surface);
+}
+
+.cta-panel-row .indicator {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+}
+
+.cta-panel-row .indicator.live {
+  background: var(--primary-container);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+}
+
+.cta-panel-row .indicator.standby {
+  background: var(--outline);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  padding: var(--space-10) 0;
+  border-top: 1px solid var(--outline-variant);
+  position: relative;
+  z-index: 2;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+.footer-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--primary-container);
+}
+
+.footer-links {
+  display: flex;
+  gap: var(--space-8);
+  list-style: none;
+}
+
+.footer-links a {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary-container);
+}
+
+.footer-location {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root {
+    --fs-display-lg: 36px;
+  }
+
+  .container {
+    padding: 0 var(--space-6);
+  }
+
+  .hero-content { grid-column: 1 / -1; }
+  .hero-panel { grid-column: 1 / -1; margin-top: var(--space-8); }
+
+  .cap-card { grid-column: span 6; }
+  .approach-phase { grid-column: span 6; }
+  .intel-card { grid-column: span 6; }
+  .intel-card.large { grid-column: span 6; flex-direction: column; align-items: flex-start; }
+  .metric-item { grid-column: span 6; }
+  .case-card { grid-column: span 6; }
+  .cta-content { grid-column: 1 / -1; }
+  .cta-panel { grid-column: 1 / -1; margin-top: var(--space-6); }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --fs-display-lg: 32px;
+  }
+
+  .container {
+    padding: 0 var(--margin-mobile);
+  }
+
+  .nav-links { display: none; }
+
+  .hero { padding-top: calc(56px + var(--space-12)); }
+  .hero-stats { flex-direction: column; gap: var(--space-4); }
+
+  .cap-card { grid-column: span 12; }
+  .approach-phase { grid-column: span 12; }
+  .intel-card { grid-column: span 12; }
+  .intel-card.large { grid-column: span 12; }
+  .metric-item { grid-column: span 6; }
+  .case-card { grid-column: span 12; }
+  .cta-panel { grid-column: span 12; }
+
+  .footer-inner { flex-direction: column; gap: var(--space-6); text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: var(--space-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel-dot { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <div class="nav-logo"></div>
+      <span class="nav-name">FinishLine</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#intelligence">Intelligence</a></li>
+      <li><a href="#cases">Engagements</a></li>
+    </ul>
+    <a href="#engage" class="nav-cta">Engage</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero">
+  <video class="hero-video" autoplay loop muted playsinline>
+    <source src="https://imagine-public.x.ai/imagine-public/share-videos/f5167891-3d07-4a37-9a92-f2b63ee29007.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-eyebrow">SECTION 01 // STRATEGIC OVERVIEW</div>
+        <h1 class="hero-title">
+          AI transformation that <span>finishes</span> what others start.
+        </h1>
+        <p class="hero-subtitle">
+          We combine management consulting rigor with defense-grade engineering to 
+          deliver enterprise AI programs that move from strategy to production — 
+          on time, at scale, with measurable outcomes.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-value">$4.2B+</div>
+            <div class="hero-stat-label">Client Value Created</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">47</div>
+            <div class="hero-stat-label">Fortune 500 Engagements</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">94%</div>
+            <div class="hero-stat-label">Production Deployment Rate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="panel-header">
+          <span class="panel-title">System Status</span>
+          <span class="panel-status">
+            <span class="panel-dot"></span>
+            ACTIVE
+          </span>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="panel-row">
+          <span class="panel-label">Active Engagements</span>
+          <span class="panel-value highlight">12</span>
+        </div>
+        <div class="panel-row">
+          <span class="panel-label">Models in Production</span>
+          <span class="panel-value">38</span>
+        </div>
+        <div class="panel-row">
+          <span class="panel-label">Data Pipelines</span>
+          <span class="panel-value">247</span>
+        </div>
+        <div class="panel-row">
+          <span class="panel-label">Inference Requests/Day</span>
+          <span class="panel-value">2.8M</span>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="panel-row">
+          <span class="panel-label">Last Deployment</span>
+          <span class="panel-value highlight">15m ago</span>
+        </div>
+        <div class="panel-row">
+          <span class="panel-label">Security Posture</span>
+          <span class="panel-value">CLEAR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CAPABILITIES
+     ============================================================ -->
+<section class="capabilities" id="capabilities">
+  <div class="container">
+    <span class="section-label">SECTION 02 // CAPABILITIES</span>
+    <div class="cap-header">
+      <h2 class="cap-headline">Full-spectrum AI transformation. Strategy through production.</h2>
+      <p class="cap-body">Every engagement is led by our principal partner paired with a principal engineer. Strategy without execution is theater.</p>
+    </div>
+    <div class="cap-grid">
+      <div class="cap-card">
+        <div class="cap-card-num">01</div>
+        <div class="cap-card-title">AI Strategy &amp; Roadmapping</div>
+        <p class="cap-card-desc">Board-level diagnostics, capability maturity assessments, and multi-year transformation roadmaps grounded in technical reality — not vendor slide decks.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-num">02</div>
+        <div class="cap-card-title">Model Selection &amp; Fine-Tuning</div>
+        <p class="cap-card-desc">Vendor-agnostic evaluation of foundation models against your data, latency, and cost constraints. Custom fine-tuning and RLHF pipelines for mission-critical domains.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-num">03</div>
+        <div class="cap-card-title">AI Infrastructure &amp; MLOps</div>
+        <p class="cap-card-desc">GPU cluster architecture, inference serving at scale, data pipeline engineering, and CI/CD for ML — built for production, not proof-of-concept.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-num">04</div>
+        <div class="cap-card-title">Agentic Systems Design</div>
+        <p class="cap-card-desc">Multi-agent architectures, tool-use frameworks, and autonomous workflow systems. We designed the patterns the market is still discovering.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-num">05</div>
+        <div class="cap-card-title">Organizational Transformation</div>
+        <p class="cap-card-desc">Talent strategy, upskilling programs, AI centers of excellence, and operating model redesign. Technology is 20% of the problem.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-num">06</div>
+        <div class="cap-card-title">Security &amp; Governance</div>
+        <p class="cap-card-desc">Adversarial robustness testing, model supply-chain security, compliance frameworks, and AI risk governance — built for regulated industries.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     METRICS STRIP
+     ============================================================ -->
+<div class="metrics">
+  <div class="container">
+    <div class="metrics-grid">
+      <div class="metric-item">
+        <span class="section-label" style="margin-bottom:4px">Operations</span>
+        <span class="metric-value">$4.2B+</span>
+        <span class="metric-label">Client value delivered</span>
+      </div>
+      <div class="metric-item">
+        <span class="section-label" style="margin-bottom:4px">Scale</span>
+        <span class="metric-value">47</span>
+        <span class="metric-label">Fortune 500 clients</span>
+      </div>
+      <div class="metric-item">
+        <span class="section-label" style="margin-bottom:4px">Production</span>
+        <span class="metric-value">94%</span>
+        <span class="metric-label">Deployment rate</span>
+      </div>
+      <div class="metric-item">
+        <span class="section-label" style="margin-bottom:4px">Team</span>
+        <span class="metric-value">340+</span>
+        <span class="metric-label">Engineers &amp; strategists</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     APPROACH
+     ============================================================ -->
+<section class="approach" id="approach">
+  <div class="container">
+    <span class="section-label">SECTION 03 // METHODOLOGY</span>
+    <div class="approach-header">
+      <h2 class="approach-title">Four phases. Zero PowerPoint theater.</h2>
+    </div>
+    <div class="approach-timeline">
+      <div class="approach-phase active">
+        <div class="approach-phase-num">PHASE 01</div>
+        <div class="approach-phase-title">Assess</div>
+        <p class="approach-phase-desc">Deep technical due diligence. We instrument your stack, benchmark your data, and produce a capability maturity model with quantified ROI projections — not a 90-slide deck.</p>
+      </div>
+      <div class="approach-phase">
+        <div class="approach-phase-num">PHASE 02</div>
+        <div class="approach-phase-title">Architect</div>
+        <p class="approach-phase-desc">Reference architecture, model selection, infrastructure design, and build-vs-buy decisions. Every decision is backed by a technical trade study.</p>
+      </div>
+      <div class="approach-phase">
+        <div class="approach-phase-num">PHASE 03</div>
+        <div class="approach-phase-title">Execute</div>
+        <p class="approach-phase-desc">Embedded engineering teams build and deploy in 6-week sprints. We don't hand off slideware — we ship production systems with your teams, not at them.</p>
+      </div>
+      <div class="approach-phase">
+        <div class="approach-phase-num">PHASE 04</div>
+        <div class="approach-phase-title">Optimize</div>
+        <p class="approach-phase-desc">Continuous improvement through A/B testing, cost optimization, model refresh cycles, and drift monitoring. The engagement doesn't end at launch.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     INTELLIGENCE FEED
+     ============================================================ -->
+<section class="intel" id="intelligence">
+  <div class="container">
+    <div class="intel-header">
+      <div class="intel-title-block">
+        <span class="section-label">SECTION 04 // MARKET INTELLIGENCE</span>
+        <h2 class="intel-title">Real-time signals from the frontier.</h2>
+      </div>
+      <span class="intel-status">
+        <span class="panel-dot" style="display:inline-block;width:6px;height:6px;margin-right:6px;"></span>
+        LIVE
+      </span>
+    </div>
+    <div class="intel-grid">
+      <div class="intel-card">
+        <span class="intel-card-tag">Model Economics</span>
+        <div class="intel-card-metric">
+          <span class="number">−62%</span>
+        </div>
+        <span class="intel-card-label">Inference cost decline (YoY)</span>
+        <p class="intel-card-desc">Frontier model inference costs have dropped 62% year-over-year, making previously uneconomical use cases viable.</p>
+      </div>
+      <div class="intel-card">
+        <span class="intel-card-tag">Enterprise Adoption</span>
+        <div class="intel-card-metric">
+          <span class="number">73%</span>
+        </div>
+        <span class="intel-card-label">Of Fortune 500 have AI in production</span>
+        <p class="intel-card-desc">But only 12% report measurable ROI. The gap is execution, not technology.</p>
+      </div>
+      <div class="intel-card">
+        <span class="intel-card-tag">Agent Systems</span>
+        <div class="intel-card-metric">
+          <span class="number">4.7×</span>
+        </div>
+        <span class="intel-card-label">Productivity multiplier (measured)</span>
+        <p class="intel-card-desc">Multi-agent architectures in software engineering deliver 4.7× productivity gains over single-model approaches.</p>
+      </div>
+      <div class="intel-card large">
+        <div class="intel-card-body">
+          <span class="intel-card-tag">Cost Trajectory — GPT-Class Models</span>
+          <div class="intel-card-metric">
+            <span class="number" style="font-size:24px;">$36 → $0.15</span>
+          </div>
+          <span class="intel-card-label">Per million tokens (2023 → 2026)</span>
+          <p class="intel-card-desc">The cost of frontier intelligence has fallen 240× in three years. Your AI strategy must be priced for 2027, not 2024.</p>
+        </div>
+        <div class="intel-card-viz">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          <div class="bar active"></div><div class="bar active"></div>
+          <div class="bar active"></div><div class="bar active"></div>
+        </div>
+      </div>
+      <div class="intel-card large">
+        <div class="intel-card-body">
+          <span class="intel-card-tag">Regulatory Landscape</span>
+          <div class="intel-card-metric">
+            <span class="number" style="font-size:24px;">14</span>
+          </div>
+          <span class="intel-card-label">Major AI regulations enacted in 2025–2026</span>
+          <p class="intel-card-desc">The EU AI Act, US Executive Orders, and sector-specific rules in finance and healthcare. Compliance is now a design constraint, not an afterthought.</p>
+        </div>
+        <div class="intel-card-viz">
+          <div class="bar"></div><div class="bar"></div><div class="bar active"></div>
+          <div class="bar active"></div><div class="bar active"></div><div class="bar"></div>
+          <div class="bar active"></div><div class="bar active"></div><div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CASE STUDIES
+     ============================================================ -->
+<section class="cases" id="cases">
+  <div class="container">
+    <span class="section-label">SECTION 05 // ENGAGEMENTS</span>
+    <div class="cases-header">
+      <h2 class="cap-headline">Selected outcomes. Not slideware.</h2>
+    </div>
+    <div class="case-grid">
+      <div class="case-card">
+        <span class="case-industry">Fortune 50 Financial Services</span>
+        <div class="case-title">AI-Powered Fraud Detection Pipeline</div>
+        <p class="case-desc">Designed and deployed a real-time fraud detection system processing 4.2M transactions/day with 99.7% detection rate and &lt;0.1% false positive rate. Reduced fraud losses by $340M in year one.</p>
+        <div class="case-results">
+          <div class="case-result">
+            <span class="case-result-value">$340M</span>
+            <span class="case-result-label">Fraud prevented</span>
+          </div>
+          <div class="case-result">
+            <span class="case-result-value">99.7%</span>
+            <span class="case-result-label">Detection rate</span>
+          </div>
+          <div class="case-result">
+            <span class="case-result-value">14 wks</span>
+            <span class="case-result-label">To production</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-card">
+        <span class="case-industry">Global Pharmaceutical</span>
+        <div class="case-title">Generative AI for Drug Discovery</div>
+        <p class="case-desc">Built a multi-modal foundation model for molecular property prediction, accelerating lead compound identification by 8×. Integrated into the client's existing computational chemistry pipeline with zero downtime.</p>
+        <div class="case-results">
+          <div class="case-result">
+            <span class="case-result-value">8×</span>
+            <span class="case-result-label">Speed increase</span>
+          </div>
+          <div class="case-result">
+            <span class="case-result-value">3</span>
+            <span class="case-result-label">IND filings enabled</span>
+          </div>
+          <div class="case-result">
+            <span class="case-result-value">$120M</span>
+            <span class="case-result-label">R&amp;D savings (est.)</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-card">
+        <span class="case-industry">F100 Manufacturing</span>
+        <div class="case-title">Autonomous Supply Chain Optimization</div>
+        <p class="case-desc">Deployed a multi-agent system for global supply chain planning across 42 facilities. Reduced inventory carrying costs by 23% while improving on-time delivery from 87% to 96%.</p>
+        <div class="case-results">
+          <div class="case-result">
+            <span class="case-result-value">23%</span>
+            <span class="case-result-label">Inventory reduction</span>
+          </div>
+          <div class="case-result">
+            <span class="case-result-value">96%</span>
+            <span class="case-result-label">On-time delivery</span>
+          </div>
+          <div class="case-result">
+            <span class="case-result-value">42</span>
+            <span class="case-result-label">Facilities</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-card">
+        <span class="case-industry">National Healthcare System</span>
+        <div class="case-title">Clinical Decision Support at Scale</div>
+        <p class="case-desc">Designed and deployed an LLM-based clinical decision support system serving 12,000+ physicians across 200 hospitals. Achieved 94% clinician satisfaction and 31% reduction in diagnostic errors in a controlled study.</p>
+        <div class="case-results">
+          <div class="case-result">
+            <span class="case-result-value">12K+</span>
+            <span class="case-result-label">Physicians served</span>
+          </div>
+          <div class="case-result">
+            <span class="case-result-value">−31%</span>
+            <span class="case-result-label">Diagnostic errors</span>
+          </div>
+          <div class="case-result">
+            <span class="case-result-value">200</span>
+            <span class="case-result-label">Hospitals</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BOOKING FORM
+     ============================================================ -->
+<section class="cta-section" id="engage">
+  <div class="container">
+    <div class="cta-grid">
+      <div class="cta-content">
+        <span class="section-label">SECTION 06 // ENGAGE</span>
+        <h2 class="cta-title">You don't need another AI strategy deck. You need production.</h2>
+        <p class="cta-desc">
+          We take on 8–12 engagements per year. Each one is led by a partner who has 
+          built and deployed ML systems at scale. The first conversation is a technical 
+          deep-dive, not a capabilities presentation.
+        </p>
+      </div>
+
+      <div class="cta-panel" id="booking-form-container">
+        <span class="cta-panel-header">Request a Briefing</span>
+        <div class="panel-divider"></div>
+        <form action="https://formsubmit.co/phil@finishlinemsp.com" method="POST" class="booking-form" id="booking-form">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_subject" value="FinishLine Briefing Request">
+          <input type="hidden" name="_template" value="box">
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="name">Full Name</label>
+              <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="email">Work Email</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="you@company.com" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="company">Company</label>
+              <input class="form-input" type="text" id="company" name="company" placeholder="Organization" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="role">Role</label>
+              <input class="form-input" type="text" id="role" name="role" placeholder="Your title">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="scope">Scope of Interest</label>
+              <select class="form-select" id="scope" name="scope" required>
+                <option value="" disabled selected>Select scope…</option>
+                <option value="enterprise">Enterprise-wide AI Transformation</option>
+                <option value="strategy">AI Strategy &amp; Roadmapping</option>
+                <option value="infrastructure">AI Infrastructure &amp; MLOps</option>
+                <option value="agents">Agentic Systems Design</option>
+                <option value="org">Organizational Transformation</option>
+                <option value="security">Security &amp; Governance</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="timeline">Timeline</label>
+              <select class="form-select" id="timeline" name="timeline">
+                <option value="" disabled selected>Select timeline…</option>
+                <option value="immediate">Immediate (0–4 weeks)</option>
+                <option value="q2">Q2 2026</option>
+                <option value="q3">Q3 2026</option>
+                <option value="q4">Q4 2026</option>
+                <option value="exploratory">Exploratory / No urgency</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field full">
+            <label class="form-label" for="message">What are you trying to achieve?</label>
+            <textarea class="form-textarea" id="message" name="message" placeholder="Briefly describe your AI transformation goals, current state, and what success looks like." rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="form-submit" id="form-submit-btn">Submit Briefing Request →</button>
+        </form>
+
+        <div class="form-thanks" id="form-thanks">
+          <div class="form-thanks-icon">◈</div>
+          <div class="form-thanks-title">Briefing Request Received</div>
+          <p class="form-thanks-desc">We review every submission personally. Expect a response from phil@finishlinemsp.com within 24 hours. If your timeline is urgent, note it in the form.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-dot"></div>
+        FINISHLINE
+      </div>
+      <ul class="footer-links">
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Research</a></li>
+        <li><a href="#">Legal</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <span class="footer-location">San Francisco  ·  New York  ·  London  ·  Taipei  ·  Manila</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('booking-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('form-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const formData = new FormData(this);
+    const res = await fetch(this.action, { method: 'POST', body: formData });
+    if (res.ok) {
+      document.getElementById('booking-form').style.display = 'none';
+      document.getElementById('form-thanks').classList.add('visible');
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Submit Briefing Request →';
+      alert('Something went wrong. Please try again or email phil@finishlinemsp.com directly.');
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Briefing Request →';
+    alert('Network error. Please try again or email phil@finishlinemsp.com directly.');
+  }
+});
+</script>
+</body>
+</html>

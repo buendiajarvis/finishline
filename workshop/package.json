@@ -1,0 +1,11 @@
+{
+  "name": "aiworx4me-workshop",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@vercel/node": "^3.0.0"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}
