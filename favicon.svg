@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <filter id="glow" x="-150%" y="-150%" width="400%" height="400%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+  <rect width="32" height="32" rx="6" fill="#0c1324"/>
+  <rect x="12" y="12" width="8" height="8" fill="#00f0ff" filter="url(#glow)" opacity="0.75"/>
+  <rect x="12" y="12" width="8" height="8" fill="#00f0ff"/>
+</svg>
