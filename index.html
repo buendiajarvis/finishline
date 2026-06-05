@@ -174,9 +174,7 @@ body {
 .capabilities,
 .approach,
 .intel,
-.cases,
-.cta-section,
-.metrics {
+.cta-section {
   position: relative;
   z-index: 2;
 }
@@ -371,91 +369,6 @@ body {
   max-width: 540px;
 }
 
-.hero-stats {
-  display: flex;
-  gap: var(--space-12);
-  padding-top: var(--space-4);
-}
-
-.hero-stat {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.hero-stat-value {
-  font-family: var(--ff-mono);
-  font-size: 28px;
-  font-weight: 500;
-  color: var(--primary-container);
-  line-height: 1;
-}
-
-.hero-stat-label {
-  font-family: var(--ff-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: var(--ls-mono-label);
-  color: var(--on-surface-variant);
-  text-transform: uppercase;
-}
-
-/* Hero Data Panel (right side) */
-.hero-panel {
-  grid-column: 9 / 13;
-  background: var(--surface-container-low);
-  border: 1px solid var(--outline-variant);
-  padding: var(--space-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  position: relative;
-}
-
-.hero-panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 2px;
-  background: var(--primary-container);
-}
-
-.hero-panel::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 2px;
-  height: 2px;
-  background: var(--primary-container);
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.panel-title {
-  font-family: var(--ff-mono);
-  font-size: var(--fs-mono-label);
-  font-weight: 500;
-  letter-spacing: var(--ls-mono-label);
-  color: var(--surface-tint);
-  text-transform: uppercase;
-}
-
-.panel-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--ff-mono);
-  font-size: 10px;
-  color: var(--primary-container);
-}
-
 .panel-dot {
   width: 6px;
   height: 6px;
@@ -472,30 +385,6 @@ body {
 .panel-divider {
   height: 1px;
   background: var(--outline-variant);
-}
-
-.panel-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.panel-label {
-  font-family: var(--ff-mono);
-  font-size: 11px;
-  color: var(--on-surface-variant);
-  text-transform: uppercase;
-  letter-spacing: var(--ls-mono-label);
-}
-
-.panel-value {
-  font-family: var(--ff-mono);
-  font-size: var(--fs-mono-data);
-  color: var(--on-surface);
-}
-
-.panel-value.highlight {
-  color: var(--primary-container);
 }
 
 /* ============================================================
@@ -824,134 +713,6 @@ body {
 .bar:nth-child(10) { height: 50%; }
 
 /* ============================================================
-   METRICS STRIP
-   ============================================================ */
-.metrics {
-  padding: var(--space-12) 0;
-  border-top: 1px solid var(--outline-variant);
-  border-bottom: 1px solid var(--outline-variant);
-  background: var(--surface-container-lowest);
-}
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gutter);
-}
-
-.metric-item {
-  grid-column: span 3;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.metric-value {
-  font-family: var(--ff-mono);
-  font-size: var(--fs-mono-data);
-  font-weight: 500;
-  color: var(--primary-container);
-}
-
-.metric-label {
-  font-family: var(--ff-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: var(--ls-mono-label);
-  color: var(--on-surface-variant);
-  text-transform: uppercase;
-}
-
-/* ============================================================
-   CASE STUDIES
-   ============================================================ */
-.cases {
-  padding: var(--space-24) 0;
-}
-
-.cases-header {
-  margin-bottom: var(--space-12);
-}
-
-.case-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gutter);
-}
-
-.case-card {
-  grid-column: span 6;
-  background: var(--surface-container-low);
-  border: 1px solid var(--outline-variant);
-  padding: var(--space-8);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  position: relative;
-}
-
-.case-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 2px;
-  background: var(--primary-container);
-}
-
-.case-industry {
-  font-family: var(--ff-mono);
-  font-size: var(--fs-mono-label);
-  font-weight: 500;
-  letter-spacing: var(--ls-mono-label);
-  color: var(--surface-tint);
-  text-transform: uppercase;
-}
-
-.case-title {
-  font-family: var(--ff-display);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--on-surface);
-  line-height: 1.3;
-}
-
-.case-desc {
-  font-size: 14px;
-  color: var(--on-surface-variant);
-  line-height: 1.6;
-}
-
-.case-results {
-  display: flex;
-  gap: var(--space-8);
-  padding-top: var(--space-2);
-}
-
-.case-result {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.case-result-value {
-  font-family: var(--ff-mono);
-  font-size: var(--fs-mono-data);
-  font-weight: 500;
-  color: var(--primary-container);
-}
-
-.case-result-label {
-  font-family: var(--ff-mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: var(--ls-mono-label);
-  color: var(--on-surface-variant);
-  text-transform: uppercase;
-}
-
-/* ============================================================
    FORM
    ============================================================ */
 .booking-form {
@@ -1266,14 +1027,11 @@ body {
   }
 
   .hero-content { grid-column: 1 / -1; }
-  .hero-panel { grid-column: 1 / -1; margin-top: var(--space-8); }
 
   .cap-card { grid-column: span 6; }
   .approach-phase { grid-column: span 6; }
   .intel-card { grid-column: span 6; }
   .intel-card.large { grid-column: span 6; flex-direction: column; align-items: flex-start; }
-  .metric-item { grid-column: span 6; }
-  .case-card { grid-column: span 6; }
   .cta-content { grid-column: 1 / -1; }
   .cta-panel { grid-column: 1 / -1; margin-top: var(--space-6); }
 }
@@ -1290,14 +1048,11 @@ body {
   .nav-links { display: none; }
 
   .hero { padding-top: calc(56px + var(--space-12)); }
-  .hero-stats { flex-direction: column; gap: var(--space-4); }
 
   .cap-card { grid-column: span 12; }
   .approach-phase { grid-column: span 12; }
   .intel-card { grid-column: span 12; }
   .intel-card.large { grid-column: span 12; }
-  .metric-item { grid-column: span 6; }
-  .case-card { grid-column: span 12; }
   .cta-panel { grid-column: span 12; }
 
   .footer-inner { flex-direction: column; gap: var(--space-6); text-align: center; }
@@ -1324,7 +1079,6 @@ body {
       <li><a href="#capabilities">Capabilities</a></li>
       <li><a href="#approach">Approach</a></li>
       <li><a href="#intelligence">Intelligence</a></li>
-      <li><a href="#cases">Engagements</a></li>
     </ul>
     <a href="#engage" class="nav-cta">Engage</a>
   </div>
@@ -1350,56 +1104,6 @@ body {
           deliver enterprise AI programs that move from strategy to production — 
           on time, at scale, with measurable outcomes.
         </p>
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <div class="hero-stat-value">$4.2B+</div>
-            <div class="hero-stat-label">Client Value Created</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-value">47</div>
-            <div class="hero-stat-label">Fortune 500 Engagements</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-value">94%</div>
-            <div class="hero-stat-label">Production Deployment Rate</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hero-panel">
-        <div class="panel-header">
-          <span class="panel-title">System Status</span>
-          <span class="panel-status">
-            <span class="panel-dot"></span>
-            ACTIVE
-          </span>
-        </div>
-        <div class="panel-divider"></div>
-        <div class="panel-row">
-          <span class="panel-label">Active Engagements</span>
-          <span class="panel-value highlight">12</span>
-        </div>
-        <div class="panel-row">
-          <span class="panel-label">Models in Production</span>
-          <span class="panel-value">38</span>
-        </div>
-        <div class="panel-row">
-          <span class="panel-label">Data Pipelines</span>
-          <span class="panel-value">247</span>
-        </div>
-        <div class="panel-row">
-          <span class="panel-label">Inference Requests/Day</span>
-          <span class="panel-value">2.8M</span>
-        </div>
-        <div class="panel-divider"></div>
-        <div class="panel-row">
-          <span class="panel-label">Last Deployment</span>
-          <span class="panel-value highlight">15m ago</span>
-        </div>
-        <div class="panel-row">
-          <span class="panel-label">Security Posture</span>
-          <span class="panel-value">CLEAR</span>
-        </div>
       </div>
     </div>
   </div>
@@ -1449,36 +1153,6 @@ body {
     </div>
   </div>
 </section>
-
-<!-- ============================================================
-     METRICS STRIP
-     ============================================================ -->
-<div class="metrics">
-  <div class="container">
-    <div class="metrics-grid">
-      <div class="metric-item">
-        <span class="section-label" style="margin-bottom:4px">Operations</span>
-        <span class="metric-value">$4.2B+</span>
-        <span class="metric-label">Client value delivered</span>
-      </div>
-      <div class="metric-item">
-        <span class="section-label" style="margin-bottom:4px">Scale</span>
-        <span class="metric-value">47</span>
-        <span class="metric-label">Fortune 500 clients</span>
-      </div>
-      <div class="metric-item">
-        <span class="section-label" style="margin-bottom:4px">Production</span>
-        <span class="metric-value">94%</span>
-        <span class="metric-label">Deployment rate</span>
-      </div>
-      <div class="metric-item">
-        <span class="section-label" style="margin-bottom:4px">Team</span>
-        <span class="metric-value">340+</span>
-        <span class="metric-label">Engineers &amp; strategists</span>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ============================================================
      APPROACH
@@ -1591,103 +1265,13 @@ body {
 </section>
 
 <!-- ============================================================
-     CASE STUDIES
-     ============================================================ -->
-<section class="cases" id="cases">
-  <div class="container">
-    <span class="section-label">SECTION 05 // ENGAGEMENTS</span>
-    <div class="cases-header">
-      <h2 class="cap-headline">Selected outcomes. Not slideware.</h2>
-    </div>
-    <div class="case-grid">
-      <div class="case-card">
-        <span class="case-industry">Fortune 50 Financial Services</span>
-        <div class="case-title">AI-Powered Fraud Detection Pipeline</div>
-        <p class="case-desc">Designed and deployed a real-time fraud detection system processing 4.2M transactions/day with 99.7% detection rate and &lt;0.1% false positive rate. Reduced fraud losses by $340M in year one.</p>
-        <div class="case-results">
-          <div class="case-result">
-            <span class="case-result-value">$340M</span>
-            <span class="case-result-label">Fraud prevented</span>
-          </div>
-          <div class="case-result">
-            <span class="case-result-value">99.7%</span>
-            <span class="case-result-label">Detection rate</span>
-          </div>
-          <div class="case-result">
-            <span class="case-result-value">14 wks</span>
-            <span class="case-result-label">To production</span>
-          </div>
-        </div>
-      </div>
-      <div class="case-card">
-        <span class="case-industry">Global Pharmaceutical</span>
-        <div class="case-title">Generative AI for Drug Discovery</div>
-        <p class="case-desc">Built a multi-modal foundation model for molecular property prediction, accelerating lead compound identification by 8×. Integrated into the client's existing computational chemistry pipeline with zero downtime.</p>
-        <div class="case-results">
-          <div class="case-result">
-            <span class="case-result-value">8×</span>
-            <span class="case-result-label">Speed increase</span>
-          </div>
-          <div class="case-result">
-            <span class="case-result-value">3</span>
-            <span class="case-result-label">IND filings enabled</span>
-          </div>
-          <div class="case-result">
-            <span class="case-result-value">$120M</span>
-            <span class="case-result-label">R&amp;D savings (est.)</span>
-          </div>
-        </div>
-      </div>
-      <div class="case-card">
-        <span class="case-industry">F100 Manufacturing</span>
-        <div class="case-title">Autonomous Supply Chain Optimization</div>
-        <p class="case-desc">Deployed a multi-agent system for global supply chain planning across 42 facilities. Reduced inventory carrying costs by 23% while improving on-time delivery from 87% to 96%.</p>
-        <div class="case-results">
-          <div class="case-result">
-            <span class="case-result-value">23%</span>
-            <span class="case-result-label">Inventory reduction</span>
-          </div>
-          <div class="case-result">
-            <span class="case-result-value">96%</span>
-            <span class="case-result-label">On-time delivery</span>
-          </div>
-          <div class="case-result">
-            <span class="case-result-value">42</span>
-            <span class="case-result-label">Facilities</span>
-          </div>
-        </div>
-      </div>
-      <div class="case-card">
-        <span class="case-industry">National Healthcare System</span>
-        <div class="case-title">Clinical Decision Support at Scale</div>
-        <p class="case-desc">Designed and deployed an LLM-based clinical decision support system serving 12,000+ physicians across 200 hospitals. Achieved 94% clinician satisfaction and 31% reduction in diagnostic errors in a controlled study.</p>
-        <div class="case-results">
-          <div class="case-result">
-            <span class="case-result-value">12K+</span>
-            <span class="case-result-label">Physicians served</span>
-          </div>
-          <div class="case-result">
-            <span class="case-result-value">−31%</span>
-            <span class="case-result-label">Diagnostic errors</span>
-          </div>
-          <div class="case-result">
-            <span class="case-result-value">200</span>
-            <span class="case-result-label">Hospitals</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
      BOOKING FORM
      ============================================================ -->
 <section class="cta-section" id="engage">
   <div class="container">
     <div class="cta-grid">
       <div class="cta-content">
-        <span class="section-label">SECTION 06 // ENGAGE</span>
+        <span class="section-label">SECTION 05 // ENGAGE</span>
         <h2 class="cta-title">You don't need another AI strategy deck. You need production.</h2>
         <p class="cta-desc">
           We take on 8–12 engagements per year. Each one is led by a partner who has 
