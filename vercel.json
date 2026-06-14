@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/msp", "destination": "/msp/contact", "permanent": false },
+    { "source": "/msp/", "destination": "/msp/contact", "permanent": false }
+  ]
+}
