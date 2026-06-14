@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D9G7BHTCJ8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D9G7BHTCJ8');
+</script>
+<title>Contact — FinishLine MSP</title>
+<meta name="description" content="Submit a customer request to FinishLine MSP. Tell us what you need — new service, technical support, or a quote — and we'll respond within one business day.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   FINISHLINE DESIGN TOKENS — from DESIGN.md
+   ============================================================ */
+:root {
+  --surface: #0c1324;
+  --surface-bright: #33394c;
+  --surface-container-lowest: #070d1f;
+  --surface-container-low: #151b2d;
+  --surface-container: #191f31;
+  --on-surface: #dce1fb;
+  --on-surface-variant: #b9cacb;
+  --outline: #849495;
+  --outline-variant: #3b494b;
+  --surface-tint: #00dbe9;
+  --on-primary: #00363a;
+  --primary-container: #00f0ff;
+  --background: #0c1324;
+
+  --ff-display: 'Hanken Grotesk', system-ui, sans-serif;
+  --ff-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --fs-display-lg: 48px;
+  --fs-headline-md: 24px;
+  --fs-body-md: 16px;
+  --fs-mono-label: 12px;
+  --fs-mono-data: 14px;
+
+  --lh-display-lg: 1.1;
+  --lh-headline-md: 1.3;
+  --lh-body-md: 1.6;
+  --lh-mono-label: 1.5;
+
+  --ls-display-lg: -0.02em;
+  --ls-headline-md: -0.01em;
+  --ls-mono-label: 0.05em;
+  --ls-body-md: 0em;
+
+  --gutter: 24px;
+  --margin-desktop: 64px;
+  --margin-mobile: 20px;
+  --container-max: 1440px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  --glow-cyan-strong: 0 0 30px rgba(0, 219, 233, 0.15);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: var(--ff-display);
+  font-size: var(--fs-body-md);
+  font-weight: 400;
+  line-height: var(--lh-body-md);
+  letter-spacing: var(--ls-body-md);
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+  width: 100%;
+}
+
+.section-label {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  line-height: var(--lh-mono-label);
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+  display: block;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(12, 19, 36, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.nav-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.nav-brand { display: flex; align-items: center; gap: var(--space-3); text-decoration: none; }
+
+.nav-logo {
+  width: 8px;
+  height: 8px;
+  background: var(--primary-container);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+.nav-name {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  font-weight: 500;
+  color: var(--on-surface);
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+}
+
+.nav-links { display: flex; align-items: center; gap: var(--space-8); list-style: none; }
+
+.nav-links a {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.nav-links a:hover { color: var(--primary-container); }
+
+.nav-cta {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  padding: var(--space-2) var(--space-4);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: box-shadow 0.2s ease;
+}
+
+.nav-cta:hover { box-shadow: var(--glow-cyan-strong); }
+
+/* ============================================================
+   CONTACT LAYOUT
+   ============================================================ */
+.contact {
+  flex: 1 0 auto;
+  padding-top: calc(56px + var(--space-20));
+  padding-bottom: var(--space-24);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+  align-items: start;
+}
+
+.contact-intro { grid-column: 1 / 6; display: flex; flex-direction: column; gap: var(--space-6); }
+
+.contact-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-display-lg);
+  font-weight: 700;
+  line-height: var(--lh-display-lg);
+  letter-spacing: var(--ls-display-lg);
+  color: var(--on-surface);
+}
+
+.contact-subtitle {
+  font-size: 18px;
+  color: var(--on-surface-variant);
+  line-height: 1.7;
+  max-width: 440px;
+}
+
+.contact-points { display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-2); }
+
+.contact-point {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  color: var(--on-surface-variant);
+}
+
+.contact-point .indicator {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  margin-top: 7px;
+  background: var(--primary-container);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+}
+
+.contact-direct {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  color: var(--on-surface-variant);
+}
+
+.contact-direct a { color: var(--primary-container); text-decoration: none; }
+.contact-direct a:hover { text-decoration: underline; }
+
+.contact-panel {
+  grid-column: 7 / 13;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.contact-panel-header {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.panel-divider { height: 1px; background: var(--outline-variant); }
+
+/* ============================================================
+   FORM
+   ============================================================ */
+.contact-form { display: flex; flex-direction: column; gap: var(--space-5); }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+
+.form-field { display: flex; flex-direction: column; gap: var(--space-1); }
+
+.form-field.full { grid-column: 1 / -1; }
+
+.form-label {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  font-family: var(--ff-display);
+  font-size: var(--fs-body-md);
+  color: var(--on-surface);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-3) var(--space-4);
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus { border-color: var(--primary-container); }
+
+.form-input::placeholder,
+.form-textarea::placeholder { color: var(--outline); }
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23849495' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.form-textarea { resize: vertical; min-height: 120px; }
+
+/* Honeypot — hidden from real users, bots fill it */
+.form-honey { position: absolute; left: -5000px; opacity: 0; height: 0; width: 0; overflow: hidden; }
+
+.form-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  padding: var(--space-3) var(--space-6);
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  align-self: flex-start;
+  transition: box-shadow 0.2s ease;
+}
+
+.form-submit:hover { box-shadow: var(--glow-cyan-strong); }
+
+.form-submit:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+.form-note {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--outline);
+}
+
+.form-thanks {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-8) 0;
+  text-align: center;
+  align-items: center;
+}
+
+.form-thanks.visible { display: flex; }
+
+.form-thanks-icon { font-family: var(--ff-mono); font-size: 32px; color: var(--primary-container); }
+
+.form-thanks-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-headline-md);
+  font-weight: 600;
+  line-height: var(--lh-headline-md);
+  color: var(--on-surface);
+}
+
+.form-thanks-desc { font-size: var(--fs-body-md); color: var(--on-surface-variant); max-width: 400px; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  flex-shrink: 0;
+  padding: var(--space-10) 0;
+  border-top: 1px solid var(--outline-variant);
+}
+
+.footer-inner { display: flex; align-items: center; justify-content: space-between; }
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.footer-dot { width: 6px; height: 6px; background: var(--primary-container); }
+
+.footer-links { display: flex; gap: var(--space-8); list-style: none; }
+
+.footer-links a {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.footer-links a:hover { color: var(--primary-container); }
+
+.footer-location {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root { --fs-display-lg: 36px; }
+  .container { padding: 0 var(--space-6); }
+  .nav-inner { padding: 0 var(--space-6); }
+  .contact-intro { grid-column: 1 / -1; }
+  .contact-panel { grid-column: 1 / -1; }
+}
+
+@media (max-width: 640px) {
+  :root { --fs-display-lg: 32px; }
+  .container { padding: 0 var(--margin-mobile); }
+  .nav-inner { padding: 0 var(--margin-mobile); }
+  .nav-links { display: none; }
+  .contact { padding-top: calc(56px + var(--space-12)); }
+  .contact-panel { padding: var(--space-6); }
+  .form-row { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; gap: var(--space-6); text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: var(--space-4); }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo"></div>
+      <span class="nav-name">FinishLine</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#capabilities">Capabilities</a></li>
+      <li><a href="/#approach">Approach</a></li>
+      <li><a href="/#intelligence">Intelligence</a></li>
+    </ul>
+    <a href="/" class="nav-cta">Main Site</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     CONTACT
+     ============================================================ -->
+<section class="contact">
+  <div class="container">
+    <div class="contact-grid">
+
+      <div class="contact-intro">
+        <span class="section-label">MSP // CUSTOMER REQUEST</span>
+        <h1 class="contact-title">Tell us what you need.</h1>
+        <p class="contact-subtitle">
+          Whether it's a new service, a quote, or hands-on technical support,
+          send us the details and the right person on our team will get back to you.
+        </p>
+        <div class="contact-points">
+          <div class="contact-point"><span class="indicator"></span><span>Response within one business day</span></div>
+          <div class="contact-point"><span class="indicator"></span><span>Routed directly to a FinishLine engineer — no call center</span></div>
+          <div class="contact-point"><span class="indicator"></span><span>Your details are used only to respond to this request</span></div>
+        </div>
+        <p class="contact-direct">
+          Prefer email? Reach us at <a href="mailto:phil@finishlinemsp.com">phil@finishlinemsp.com</a>
+        </p>
+      </div>
+
+      <div class="contact-panel">
+        <span class="contact-panel-header">Submit a Request</span>
+        <div class="panel-divider"></div>
+
+        <form action="https://formsubmit.co/phil@finishlinemsp.com" method="POST" class="contact-form" id="contact-form">
+          <input type="hidden" name="_subject" value="FinishLine MSP — Customer Request">
+          <input type="hidden" name="_template" value="box">
+          <input type="hidden" name="_captcha" value="false">
+          <!-- Honeypot: real users never see this; bots fill it and get rejected -->
+          <input type="text" name="_honey" class="form-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="name">Full Name</label>
+              <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="email">Email</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="you@company.com" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="phone">Phone</label>
+              <input class="form-input" type="tel" id="phone" name="phone" placeholder="(optional)">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="company">Company</label>
+              <input class="form-input" type="text" id="company" name="company" placeholder="Organization">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="request-type">Type of Request</label>
+              <select class="form-select" id="request-type" name="request_type" required>
+                <option value="" disabled selected>Select…</option>
+                <option value="new-service">New Service / Quote</option>
+                <option value="technical-support">Technical Support</option>
+                <option value="account-billing">Account &amp; Billing</option>
+                <option value="general">General Inquiry</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="urgency">Urgency</label>
+              <select class="form-select" id="urgency" name="urgency">
+                <option value="" disabled selected>Select…</option>
+                <option value="low">Low — whenever</option>
+                <option value="normal">Normal — this week</option>
+                <option value="high">High — within 24h</option>
+                <option value="urgent">Urgent — production down</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field full">
+            <label class="form-label" for="message">How can we help?</label>
+            <textarea class="form-textarea" id="message" name="message" placeholder="Describe your request, the systems involved, and what a good outcome looks like." rows="4" required></textarea>
+          </div>
+
+          <button type="submit" class="form-submit" id="form-submit-btn">Submit Request →</button>
+          <span class="form-note">We'll only use your details to respond to this request.</span>
+        </form>
+
+        <div class="form-thanks" id="form-thanks">
+          <div class="form-thanks-icon">◈</div>
+          <div class="form-thanks-title">Request Received</div>
+          <p class="form-thanks-desc">Thanks — we've got your request. Expect a reply from phil@finishlinemsp.com within one business day. If it's urgent, note that in the message and we'll prioritize it.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <a href="/" class="footer-brand">
+        <div class="footer-dot"></div>
+        FINISHLINE
+      </a>
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#capabilities">Capabilities</a></li>
+        <li><a href="/msp/contact">Contact</a></li>
+      </ul>
+      <span class="footer-location">San Francisco · New York · London · Taipei · Manila</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('form-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const formData = new FormData(this);
+    const res = await fetch(this.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', { form: 'msp_contact' });
+      }
+      this.style.display = 'none';
+      document.getElementById('form-thanks').classList.add('visible');
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Submit Request →';
+      alert('Something went wrong. Please try again or email phil@finishlinemsp.com directly.');
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Request →';
+    alert('Network error. Please try again or email phil@finishlinemsp.com directly.');
+  }
+});
+</script>
+</body>
+</html>
