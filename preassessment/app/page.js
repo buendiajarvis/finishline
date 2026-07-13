@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronRight, Loader, Check, Download, CreditCard } from 'lucide-react';
+import { ChevronRight, Loader, Check, CreditCard } from 'lucide-react';
 import { SECTIONS, visibleQuestions } from '@/lib/questions';
 
 const PACKAGES = [
@@ -230,6 +230,8 @@ function QuestionField({ question, value, onChange }) {
           onChange={(e) => onChange(e.target.value)}
           className="w-full px-4 py-3 rounded-lg focus:outline-none"
           style={fieldStyle}
+          onFocus={(e) => { e.target.style.boxShadow = '0 0 0 2px var(--primary-container)'; }}
+          onBlur={(e) => { e.target.style.boxShadow = 'none'; }}
         />
       ) : question.type === 'textarea' ? (
         <textarea
@@ -238,6 +240,8 @@ function QuestionField({ question, value, onChange }) {
           rows={4}
           className="w-full px-4 py-3 rounded-lg focus:outline-none resize-none"
           style={fieldStyle}
+          onFocus={(e) => { e.target.style.boxShadow = '0 0 0 2px var(--primary-container)'; }}
+          onBlur={(e) => { e.target.style.boxShadow = 'none'; }}
         />
       ) : question.type === 'select' ? (
         <select
@@ -245,6 +249,8 @@ function QuestionField({ question, value, onChange }) {
           onChange={(e) => onChange(e.target.value)}
           className="w-full px-4 py-3 rounded-lg focus:outline-none"
           style={fieldStyle}
+          onFocus={(e) => { e.target.style.boxShadow = '0 0 0 2px var(--primary-container)'; }}
+          onBlur={(e) => { e.target.style.boxShadow = 'none'; }}
         >
           <option value="">Select an option</option>
           {question.options.map((opt) => (
@@ -267,6 +273,7 @@ function QuestionField({ question, value, onChange }) {
                 checked={value === opt.value}
                 onChange={() => onChange(opt.value)}
                 className="w-4 h-4"
+                style={{ accentColor: 'var(--primary-container)' }}
               />
               <span className="ml-3" style={{ color: 'var(--on-surface-variant)' }}>{opt.label}</span>
             </label>
@@ -289,6 +296,7 @@ function QuestionField({ question, value, onChange }) {
                     onChange(arr.includes(opt) ? arr.filter((x) => x !== opt) : [...arr, opt])
                   }
                   className="w-4 h-4 rounded"
+                  style={{ accentColor: 'var(--primary-container)' }}
                 />
                 <span className="ml-3" style={{ color: 'var(--on-surface-variant)' }}>{opt}</span>
               </label>
