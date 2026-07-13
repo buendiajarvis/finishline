@@ -71,13 +71,13 @@ export default function Home() {
     }
   }
 
-  async function selectPackage(packageType) {
+  async function unlockPlan() {
     setStage('paying');
     try {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ packageType, orgName: answers.orgName, email: answers.email }),
+        body: JSON.stringify({ orgName: answers.orgName, email: answers.email }),
       });
       const data = await res.json();
       if (data.url) {
