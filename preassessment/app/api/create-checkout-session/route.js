@@ -2,7 +2,9 @@
 //
 // Creates a real Stripe Checkout Session and returns its URL for redirect.
 // The diagnostic fee is defined server-side only — never trust a price
-// sent from the client.
+// sent from the client. The generated plan text is chunked into session
+// metadata so /api/get-plan can reconstruct it after payment, without a
+// database — Stripe's own session record is the store.
 
 import Stripe from 'stripe';
 
@@ -14,11 +16,28 @@ const DIAGNOSTIC = {
   amount: 75000,
 };
 
+const CHUNK_SIZE = 450; // stay under Stripe's 500-char metadata value limit
+
+function chunkText(prefix, text, metadata) {
+  const chunks = [];
+  for (let i = 0; i < text.length; i += CHUNK_SIZE) {
+    chunks.push(text.slice(i, i + CHUNK_SIZE));
+  }
+  metadata[`${prefix}_count`] = String(chunks.length);
+  chunks.forEach((chunk, i) => {
+    metadata[`${prefix}_${i}`] = chunk;
+  });
+}
+
 export async function POST(request) {
   try {
-    const { orgName, email } = await request.json();
+    const { orgName, email, situationAnalysis, fullPlan } = await request.json();
 
     const domain = process.env.NEXT_PUBLIC_DOMAIN || 'http://localhost:3000';
+
+    const metadata = { orgName: orgName || '' };
+    chunkText('situation', situationAnalysis || '', metadata);
+    chunkText('plan', fullPlan || '', metadata);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -39,9 +58,7 @@ export async function POST(request) {
       success_url: `${domain}/booking-confirmed?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${domain}/`,
       customer_email: email || undefined,
-      metadata: {
-        orgName: orgName || '',
-      },
+      metadata,
     });
 
     return Response.json({ url: session.url });
