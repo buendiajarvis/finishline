@@ -617,6 +617,274 @@ git commit -m "feat(preassessment): rename selectPackage to unlockPlan for singl
 
 ---
 
+---
+
+### Task 6: Deliver the paid plan after checkout (final-review fix)
+
+**Added after final whole-branch review found the paid `fullPlan` was never delivered post-payment** — the checkout flow does a full-page redirect to Stripe, which destroys React state, and `/booking-confirmed` had no way to retrieve what was paid for. No DB/session persistence layer exists yet (separate future sub-project), so this uses Stripe's own session metadata as the store — no new infrastructure.
+
+**Files:**
+- Modify: `preassessment/app/page.js` (`unlockPlan` sends `situationAnalysis`/`fullPlan` in the request body)
+- Modify: `preassessment/app/api/create-checkout-session/route.js` (chunk plan text into Stripe metadata)
+- Create: `preassessment/app/api/get-plan/route.js` (reconstruct plan text from a session's metadata)
+- Modify: `preassessment/app/booking-confirmed/page.js` (fetch and render the unlocked plan; fix stale "booking" copy)
+
+**Interfaces:**
+- `create-checkout-session` now accepts `{ orgName, email, situationAnalysis, fullPlan }` and stores `fullPlan` chunked across metadata keys `plan_0`, `plan_1`, ... (Stripe metadata values cap at 500 chars each, 50 keys max — chunk accordingly) plus `situationAnalysis` under its own key if it fits, else its own chunk set.
+- `get-plan` route: `GET /api/get-plan?session_id=...`, calls `stripe.checkout.sessions.retrieve(session_id)`, reconstructs `fullPlan`/`situationAnalysis` from the ordered metadata chunks, returns `{ situationAnalysis, fullPlan, orgName }`.
+- `booking-confirmed` reads `?session_id=` from the URL (Stripe's `success_url` already includes `{CHECKOUT_SESSION_ID}`), calls `get-plan`, shows a loading state, then renders the unlocked plan with the same visual language as the (now un-blurred) offering screen. Falls back to a plain confirmation message if the fetch fails (e.g. no session_id, expired session) rather than erroring the page.
+
+- [ ] **Step 1: Update `unlockPlan` to send the plan content**
+
+In `preassessment/app/page.js`, find `unlockPlan`'s fetch call body:
+
+```js
+        body: JSON.stringify({ orgName: answers.orgName, email: answers.email }),
+```
+
+Replace with:
+
+```js
+        body: JSON.stringify({
+          orgName: answers.orgName,
+          email: answers.email,
+          situationAnalysis: offering.situationAnalysis,
+          fullPlan: offering.fullPlan,
+        }),
+```
+
+- [ ] **Step 2: Chunk plan text into Stripe metadata**
+
+Replace `preassessment/app/api/create-checkout-session/route.js` entirely with:
+
+```js
+// app/api/create-checkout-session/route.js
+//
+// Creates a real Stripe Checkout Session and returns its URL for redirect.
+// The diagnostic fee is defined server-side only — never trust a price
+// sent from the client. The generated plan text is chunked into session
+// metadata so /api/get-plan can reconstruct it after payment, without a
+// database — Stripe's own session record is the store.
+
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+const DIAGNOSTIC = {
+  name: 'AI Readiness Diagnostic & Plan',
+  description: 'Full diagnostic, ranked recommendations, and implementation roadmap. Credited in full toward implementation if you move forward.',
+  amount: 75000,
+};
+
+const CHUNK_SIZE = 450; // stay under Stripe's 500-char metadata value limit
+
+function chunkText(prefix, text, metadata) {
+  const chunks = [];
+  for (let i = 0; i < text.length; i += CHUNK_SIZE) {
+    chunks.push(text.slice(i, i + CHUNK_SIZE));
+  }
+  metadata[`${prefix}_count`] = String(chunks.length);
+  chunks.forEach((chunk, i) => {
+    metadata[`${prefix}_${i}`] = chunk;
+  });
+}
+
+export async function POST(request) {
+  try {
+    const { orgName, email, situationAnalysis, fullPlan } = await request.json();
+
+    const domain = process.env.NEXT_PUBLIC_DOMAIN || 'http://localhost:3000';
+
+    const metadata = { orgName: orgName || '' };
+    chunkText('situation', situationAnalysis || '', metadata);
+    chunkText('plan', fullPlan || '', metadata);
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: `${DIAGNOSTIC.name} — ${orgName || 'Assessment'}`,
+              description: DIAGNOSTIC.description,
+            },
+            unit_amount: DIAGNOSTIC.amount,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${domain}/booking-confirmed?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${domain}/`,
+      customer_email: email || undefined,
+      metadata,
+    });
+
+    return Response.json({ url: session.url });
+  } catch (err) {
+    console.error('create-checkout-session error:', err);
+    return Response.json({ error: 'Failed to create checkout session' }, { status: 500 });
+  }
+}
+```
+
+- [ ] **Step 3: Create the plan-retrieval route**
+
+Create `preassessment/app/api/get-plan/route.js`:
+
+```js
+// app/api/get-plan/route.js
+//
+// Reconstructs the paid plan text from a completed Stripe Checkout
+// Session's metadata (chunked there at checkout-creation time — see
+// /api/create-checkout-session). No database involved: the session
+// itself is the record of what was purchased.
+
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+function reassembleChunks(prefix, metadata) {
+  const count = parseInt(metadata[`${prefix}_count`] || '0', 10);
+  let text = '';
+  for (let i = 0; i < count; i++) {
+    text += metadata[`${prefix}_${i}`] || '';
+  }
+  return text;
+}
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const sessionId = searchParams.get('session_id');
+
+  if (!sessionId) {
+    return Response.json({ error: 'Missing session_id' }, { status: 400 });
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.payment_status !== 'paid') {
+      return Response.json({ error: 'Payment not completed' }, { status: 402 });
+    }
+
+    const metadata = session.metadata || {};
+    const situationAnalysis = reassembleChunks('situation', metadata);
+    const fullPlan = reassembleChunks('plan', metadata);
+
+    return Response.json({
+      orgName: metadata.orgName || '',
+      situationAnalysis,
+      fullPlan,
+    });
+  } catch (err) {
+    console.error('get-plan error:', err);
+    return Response.json({ error: 'Failed to retrieve plan' }, { status: 500 });
+  }
+}
+```
+
+- [ ] **Step 4: Rewrite `booking-confirmed` to fetch and render the unlocked plan**
+
+Replace `preassessment/app/booking-confirmed/page.js` entirely with:
+
+```js
+'use client';
+
+import { useEffect, useState } from 'react';
+
+export default function BookingConfirmed() {
+  const [status, setStatus] = useState('loading'); // loading -> ready -> error
+  const [plan, setPlan] = useState(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+
+    if (!sessionId) {
+      setStatus('error');
+      return;
+    }
+
+    fetch(`/api/get-plan?session_id=${encodeURIComponent(sessionId)}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to load plan');
+        return res.json();
+      })
+      .then((data) => {
+        setPlan(data);
+        setStatus('ready');
+      })
+      .catch(() => setStatus('error'));
+  }, []);
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--background)' }}>
+        <p style={{ color: 'var(--on-surface-variant)' }}>Loading your plan…</p>
+      </div>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--background)' }}>
+        <div
+          className="rounded-lg p-12 max-w-md text-center"
+          style={{ background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)' }}
+        >
+          <h1 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--ff-display)', color: 'var(--on-surface)' }}>
+            Payment Received
+          </h1>
+          <p style={{ color: 'var(--on-surface-variant)' }}>
+            Check your email for a copy of your plan. If you don't see it shortly, contact us and we'll resend it.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen py-12 px-6" style={{ background: 'var(--background)' }}>
+      <div className="max-w-2xl mx-auto">
+        <div
+          className="rounded-lg p-8 mb-8"
+          style={{ background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)' }}
+        >
+          <h1 className="text-2xl font-bold mb-4" style={{ fontFamily: 'var(--ff-display)', color: 'var(--on-surface)' }}>
+            Your Plan Is Unlocked
+          </h1>
+          <div className="whitespace-pre-wrap leading-relaxed mb-6" style={{ color: 'var(--on-surface-variant)' }}>
+            {plan.situationAnalysis}
+          </div>
+          <div className="whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>
+            {plan.fullPlan}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 5: Verify in browser**
+
+Run: `cd preassessment && npm run dev` (if not already running)
+
+With real Stripe test keys configured: walk the full flow through checkout completion with test card `4242 4242 4242 4242`, confirm `/booking-confirmed?session_id=...` shows "Your Plan Is Unlocked" followed by the actual situation analysis and full plan text (not blurred, not the old "Booking Confirmed!" copy).
+
+Without real Stripe keys (this environment): verify `/api/get-plan` returns a 400 for a missing `session_id`, and manually confirm `preassessment/app/booking-confirmed/page.js` renders its `error` state (the "Payment Received" fallback) when visited with no query string, since a real session_id can't be produced without live Stripe keys — that confirms the fallback path works even though the happy path can't be exercised here.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add preassessment/app/page.js preassessment/app/api/create-checkout-session/route.js preassessment/app/api/get-plan/route.js preassessment/app/booking-confirmed/page.js
+git commit -m "fix(preassessment): deliver paid plan post-checkout via Stripe session metadata"
+```
+
+---
+
 ## Self-Review Notes
 
 - **Spec coverage:** Task 1 = question generalization; Task 2 = offering split (situationAnalysis/fullPlan); Task 3 = single diagnostic fee in checkout route; Tasks 4-5 = OfferingScreen paywall UI + wiring; Task 5 Step 3 = the spec's full manual testing walkthrough. All spec sections have a task.
