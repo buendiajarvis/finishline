@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Foundation */
+  --surface: #0c1324;
+  --surface-dim: #0c1324;
+  --surface-bright: #33394c;
+  --surface-container-lowest: #070d1f;
+  --surface-container-low: #151b2d;
+  --surface-container: #191f31;
+  --surface-container-high: #23293c;
+  --surface-container-highest: #2e3447;
+
+  /* On-surface (text) */
+  --on-surface: #dce1fb;
+  --on-surface-variant: #b9cacb;
+
+  /* Inverse */
+  --inverse-surface: #dce1fb;
+  --inverse-on-surface: #2a3043;
+
+  /* Outlines */
+  --outline: #849495;
+  --outline-variant: #3b494b;
+
+  /* Primary — Electric Cyan */
+  --surface-tint: #00dbe9;
+  --primary: #dbfcff;
+  --on-primary: #00363a;
+  --primary-container: #00f0ff;
+  --on-primary-container: #006970;
+  --inverse-primary: #006970;
+
+  /* Secondary — Steel Blue */
+  --secondary: #b7c8e1;
+  --on-secondary: #213145;
+  --secondary-container: #3a4a5f;
+  --on-secondary-container: #a9bad3;
+
+  /* Tertiary — Lavender */
+  --tertiary: #f5f5ff;
+  --on-tertiary: #283044;
+  --tertiary-container: #d1d9f3;
+  --on-tertiary-container: #575e75;
+
+  /* Error */
+  --error: #ffb4ab;
+  --on-error: #690005;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+
+  --background: #0c1324;
+  --on-background: #dce1fb;
+  --surface-variant: #2e3447;
+
+  /* Typography */
+  --ff-display: 'Hanken Grotesk', system-ui, sans-serif;
+  --ff-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --fs-display-lg: 48px;
+  --fs-display-lg-mobile: 32px;
+  --fs-headline-md: 24px;
+  --fs-body-md: 16px;
+  --fs-mono-label: 12px;
+  --fs-mono-data: 14px;
+
+  --lh-body-md: 1.6;
+  --ls-mono-label: 0.05em;
+
+  /* Spacing — 4px base unit */
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --container-max: 1440px;
+  --margin-desktop: 64px;
+  --margin-mobile: 20px;
+
+  /* Glow */
+  --glow-cyan: 0 0 15px rgba(0, 219, 233, 0.08);
+  --glow-cyan-strong: 0 0 30px rgba(0, 219, 233, 0.15);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: var(--ff-display);
+  font-size: var(--fs-body-md);
+  font-weight: 400;
+  line-height: var(--lh-body-md);
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--margin-mobile);
+  }
+}
