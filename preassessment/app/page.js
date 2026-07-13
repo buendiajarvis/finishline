@@ -4,12 +4,6 @@ import { useState } from 'react';
 import { ChevronRight, Loader, Check, CreditCard } from 'lucide-react';
 import { SECTIONS, visibleQuestions } from '@/lib/questions';
 
-const PACKAGES = [
-  { type: 'quick-call', name: 'Quick Call', price: 49, duration: '30 min' },
-  { type: 'deep-dive', name: 'Deep Dive', price: 199, duration: '90 min', popular: true },
-  { type: 'strategy-session', name: 'Strategy Session', price: 399, duration: '2 hrs' },
-];
-
 export default function Home() {
   const [sectionIndex, setSectionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -120,7 +114,7 @@ export default function Home() {
   }
 
   if (stage === 'offering' && offering) {
-    return <OfferingScreen offering={offering} onSelectPackage={selectPackage} />;
+    return <OfferingScreen offering={offering} onUnlock={unlockPlan} />;
   }
 
   return (
@@ -308,7 +302,7 @@ function QuestionField({ question, value, onChange }) {
   );
 }
 
-function OfferingScreen({ offering, onSelectPackage }) {
+function OfferingScreen({ offering, onUnlock }) {
   return (
     <div className="min-h-screen py-12 px-6" style={{ background: 'var(--background)' }}>
       <div className="max-w-2xl mx-auto">
@@ -324,44 +318,49 @@ function OfferingScreen({ offering, onSelectPackage }) {
               <Check className="w-5 h-5" style={{ color: 'var(--on-primary)' }} />
             </div>
             <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--ff-display)', color: 'var(--on-surface)' }}>
-              Your Tailored Assessment
+              Your Situation, At a Glance
             </h1>
           </div>
           <div className="whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--on-surface-variant)' }}>
-            {offering.content}
+            {offering.situationAnalysis}
           </div>
         </div>
 
-        <h2 className="text-lg font-semibold mb-4" style={{ fontFamily: 'var(--ff-display)', color: 'var(--on-surface)' }}>
-          Reserve Your Consultation
-        </h2>
-        <div className="grid sm:grid-cols-3 gap-4">
-          {PACKAGES.map((pkg) => (
-            <div
-              key={pkg.type}
-              className="rounded-lg p-6"
-              style={{
-                background: 'var(--surface-container-low)',
-                border: pkg.popular ? '2px solid var(--primary-container)' : '1px solid var(--outline-variant)',
-                boxShadow: pkg.popular ? 'var(--glow-cyan)' : 'none',
-              }}
+        <div className="relative rounded-lg overflow-hidden" style={{ border: '1px solid var(--outline-variant)' }}>
+          <div
+            className="whitespace-pre-wrap leading-relaxed p-8 select-none pointer-events-none"
+            style={{ color: 'var(--on-surface-variant)', filter: 'blur(4px)', maxHeight: '260px', overflow: 'hidden' }}
+            aria-hidden="true"
+          >
+            {offering.fullPlan}
+          </div>
+
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center text-center p-8"
+            style={{ background: 'rgba(12, 19, 36, 0.82)' }}
+          >
+            <h2 className="text-xl font-bold mb-2" style={{ fontFamily: 'var(--ff-display)', color: 'var(--on-surface)' }}>
+              Your Full Plan Is Ready
+            </h2>
+            <p className="max-w-sm mb-6" style={{ color: 'var(--on-surface-variant)' }}>
+              Three ranked recommendations, a phased implementation roadmap, and investment guidance tailored to what you shared.
+            </p>
+            <p className="text-3xl font-bold mb-1" style={{ fontFamily: 'var(--ff-mono)', color: 'var(--on-surface)' }}>
+              $750
+            </p>
+            <p className="text-sm mb-6 max-w-sm" style={{ color: 'var(--on-surface-variant)' }}>
+              Credited in full toward implementation if you move forward.
+            </p>
+            <button
+              onClick={onUnlock}
+              className="px-6 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+              style={{ background: 'var(--primary-container)', color: 'var(--on-primary)', boxShadow: 'var(--glow-cyan)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = 'var(--glow-cyan-strong)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'var(--glow-cyan)'; }}
             >
-              <h3 className="font-semibold" style={{ color: 'var(--on-surface)' }}>{pkg.name}</h3>
-              <p className="text-2xl font-bold mt-2" style={{ fontFamily: 'var(--ff-mono)', color: 'var(--on-surface)' }}>
-                ${pkg.price}
-              </p>
-              <p className="text-sm mb-4" style={{ fontFamily: 'var(--ff-mono)', color: 'var(--on-surface-variant)' }}>
-                {pkg.duration}
-              </p>
-              <button
-                onClick={() => onSelectPackage(pkg.type)}
-                className="w-full py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1"
-                style={{ background: 'var(--primary-container)', color: 'var(--on-primary)' }}
-              >
-                <CreditCard className="w-4 h-4" /> Reserve
-              </button>
-            </div>
-          ))}
+              <CreditCard className="w-4 h-4" /> Unlock Your Plan
+            </button>
+          </div>
         </div>
       </div>
     </div>
