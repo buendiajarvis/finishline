@@ -522,11 +522,7 @@ body {
         <span class="contact-panel-header">Submit a Request</span>
         <div class="panel-divider"></div>
 
-        <form action="https://formsubmit.co/phil@finishlinemsp.com" method="POST" class="contact-form" id="contact-form">
-          <input type="hidden" name="_subject" value="FinishLine MSP — Customer Request">
-          <input type="hidden" name="_template" value="box">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_next" value="https://finishlinemsp.com/msp/contact?sent=1">
+        <form action="/api/contact" method="POST" class="contact-form" id="contact-form">
           <!-- Honeypot: real users never see this; bots fill it and get rejected -->
           <input type="text" name="_honey" class="form-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
 
@@ -617,22 +613,43 @@ body {
 </footer>
 
 <script>
-// Native form POST to FormSubmit (avoids relying on their ajax/CORS endpoint,
-// which is unreliable). FormSubmit redirects to _next with ?sent=1 on success.
-document.getElementById('contact-form').addEventListener('submit', function(e) {
+// Posts to our own /api/contact serverless function (same-origin — no CORS
+// dependency on a third-party form service). Hard timeout so a slow backend
+// can never hang the button indefinitely.
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
   const btn = document.getElementById('form-submit-btn');
   btn.disabled = true;
   btn.textContent = 'Sending…';
-  if (typeof gtag === 'function') {
-    gtag('event', 'generate_lead', { form: 'msp_contact' });
-  }
-  // let the browser submit normally — no preventDefault
-});
 
-if (new URLSearchParams(window.location.search).get('sent') === '1') {
-  document.getElementById('contact-form').style.display = 'none';
-  document.getElementById('form-thanks').classList.add('visible');
-}
+  const data = Object.fromEntries(new FormData(this).entries());
+  const ctrl = new AbortController();
+  const timeout = setTimeout(() => ctrl.abort(), 12000);
+
+  try {
+    const res = await fetch(this.action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      signal: ctrl.signal
+    });
+    if (res.ok) {
+      if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', { form: 'msp_contact' });
+      }
+      this.style.display = 'none';
+      document.getElementById('form-thanks').classList.add('visible');
+    } else {
+      throw new Error('Request failed: ' + res.status);
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Request →';
+    alert('Something went wrong. Please try again or email phil@finishlinemsp.com directly.');
+  } finally {
+    clearTimeout(timeout);
+  }
+});
 </script>
 </body>
 </html>
