@@ -49,9 +49,10 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Unsupported file type. Use .txt, .md, .pdf, or .docx.' });
     }
   } catch (e) {
-    // Log only the error message, never the file buffer/text — some
-    // parser errors include a snippet of the offending content.
-    console.error('Extraction error:', e?.message || 'unknown');
+    // Log only the error's constructor name — never e.message or the file
+    // buffer/text. Some pdf-parse/mammoth failures embed a snippet of the
+    // offending content directly in the error message.
+    console.error('Extraction error:', e?.constructor?.name || 'unknown');
     return res.status(422).json({ error: 'Could not read that file. Try a different one.' });
   }
 
