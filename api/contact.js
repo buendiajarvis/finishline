@@ -57,7 +57,7 @@ Submitted via finishlinemsp.com/msp/contact`;
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'FinishLine MSP <onboarding@resend.dev>',
+        from: 'FinishLine MSP <register@aiworx4me.com>',
         to: ['phil@finishlinemsp.com'],
         reply_to: email,
         subject: 'FinishLine MSP — Customer Request',
