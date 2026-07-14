@@ -1064,6 +1064,203 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .panel-dot { animation: none; }
 }
+
+/* ============================================================
+   DEMO CHATBOT WIDGET
+   ============================================================ */
+.chatbot-launcher {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border: none;
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
+  box-shadow: var(--glow-cyan-strong);
+}
+
+.chatbot-launcher:hover { box-shadow: 0 0 40px rgba(0, 219, 233, 0.35); }
+.chatbot-launcher.hidden { display: none; }
+
+.chatbot-panel {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  z-index: 200;
+  width: 380px;
+  max-width: calc(100vw - 2 * var(--space-6));
+  height: 560px;
+  max-height: calc(100vh - 2 * var(--space-6));
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.chatbot-panel.open { display: flex; }
+
+.chatbot-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--outline-variant);
+  flex-shrink: 0;
+}
+
+.chatbot-head-title {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.chatbot-close {
+  background: none;
+  border: none;
+  color: var(--on-surface-variant);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: var(--space-1);
+}
+.chatbot-close:hover { color: var(--on-surface); }
+
+.chatbot-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.chatbot-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.chatbot-upload p {
+  font-size: 13px;
+  color: var(--on-surface-variant);
+  line-height: 1.6;
+}
+
+.chatbot-file-btn {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--primary-container);
+  background: transparent;
+  border: 1px solid var(--primary-container);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+}
+.chatbot-file-btn:hover { background: rgba(0, 240, 255, 0.08); }
+.chatbot-file-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.chatbot-file-name {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--on-surface-variant);
+}
+
+.chatbot-msg {
+  max-width: 88%;
+  font-size: 13px;
+  line-height: 1.55;
+  padding: var(--space-3) var(--space-4);
+}
+
+.chatbot-msg.user {
+  align-self: flex-end;
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--on-surface);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+}
+
+.chatbot-msg.bot {
+  align-self: flex-start;
+  background: var(--surface-container);
+  color: var(--on-surface);
+  border: 1px solid var(--outline-variant);
+}
+
+.chatbot-msg.system {
+  align-self: center;
+  color: var(--outline);
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  background: none;
+  border: none;
+  text-align: center;
+  padding: var(--space-1) 0;
+}
+
+.chatbot-foot {
+  border-top: 1px solid var(--outline-variant);
+  padding: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.chatbot-input {
+  flex: 1;
+  font-family: var(--ff-display);
+  font-size: 13px;
+  color: var(--on-surface);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-2) var(--space-3);
+  outline: none;
+}
+.chatbot-input:focus { border-color: var(--primary-container); }
+.chatbot-input:disabled { opacity: 0.5; }
+
+.chatbot-send {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border: none;
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+}
+.chatbot-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.chatbot-meta {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--outline);
+  padding: 0 var(--space-5) var(--space-3);
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .chatbot-panel { width: calc(100vw - 2 * var(--space-4)); right: var(--space-4); bottom: var(--space-4); height: calc(100vh - 2 * var(--space-4)); }
+  .chatbot-launcher { right: var(--space-4); bottom: var(--space-4); }
+}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D9G7BHTCJ8"></script>
@@ -1410,6 +1607,197 @@ document.getElementById('booking-form').addEventListener('submit', async functio
     alert('Network error. Please try again or email phil@finishlinemsp.com directly.');
   }
 });
+</script>
+
+<!-- ============================================================
+     DEMO CHATBOT WIDGET
+     ============================================================ -->
+<button class="chatbot-launcher" id="chatbot-launcher">
+  <span>◈ Try our AI support demo</span>
+</button>
+
+<div class="chatbot-panel" id="chatbot-panel">
+  <div class="chatbot-head">
+    <span class="chatbot-head-title">Document Q&A Demo</span>
+    <button class="chatbot-close" id="chatbot-close" aria-label="Close">✕</button>
+  </div>
+
+  <div class="chatbot-body" id="chatbot-body">
+    <div class="chatbot-upload" id="chatbot-upload">
+      <p>Upload a document (.txt, .md, .pdf, .docx) and ask questions — the assistant only answers from what's in the file. Demo limit: 10 messages / 5 minutes.</p>
+      <input type="file" id="chatbot-file-input" accept=".txt,.md,.pdf,.docx" style="display:none;">
+      <button class="chatbot-file-btn" id="chatbot-file-btn">Choose Document</button>
+      <span class="chatbot-file-name" id="chatbot-file-name"></span>
+    </div>
+  </div>
+
+  <div class="chatbot-meta" id="chatbot-meta"></div>
+  <div class="chatbot-foot">
+    <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Upload a document to start…" disabled>
+    <button class="chatbot-send" id="chatbot-send" disabled>Send</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const launcher = document.getElementById('chatbot-launcher');
+  const panel = document.getElementById('chatbot-panel');
+  const closeBtn = document.getElementById('chatbot-close');
+  const body = document.getElementById('chatbot-body');
+  const fileInput = document.getElementById('chatbot-file-input');
+  const fileBtn = document.getElementById('chatbot-file-btn');
+  const fileName = document.getElementById('chatbot-file-name');
+  const input = document.getElementById('chatbot-input');
+  const sendBtn = document.getElementById('chatbot-send');
+  const meta = document.getElementById('chatbot-meta');
+
+  let documentText = null;
+  let history = [];
+  let sessionStart = null;
+  const MAX_TURNS = 10;
+  const MAX_SESSION_MS = 5 * 60 * 1000;
+
+  function addMsg(text, cls) {
+    const div = document.createElement('div');
+    div.className = 'chatbot-msg ' + cls;
+    div.textContent = text;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+    return div;
+  }
+
+  function updateMeta() {
+    if (!sessionStart) { meta.textContent = ''; return; }
+    const turnsLeft = Math.max(0, MAX_TURNS - history.filter(m => m.role === 'user').length);
+    const msLeft = Math.max(0, MAX_SESSION_MS - (Date.now() - sessionStart));
+    const minLeft = Math.ceil(msLeft / 60000);
+    meta.textContent = `${turnsLeft} messages left · demo session ends in ~${minLeft} min`;
+  }
+
+  launcher.addEventListener('click', () => {
+    panel.classList.add('open');
+    launcher.classList.add('hidden');
+  });
+  closeBtn.addEventListener('click', () => {
+    panel.classList.remove('open');
+    launcher.classList.remove('hidden');
+  });
+  fileBtn.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    if (file.size > 3 * 1024 * 1024) {
+      addMsg('That file is too large for the demo (3MB max).', 'system');
+      return;
+    }
+
+    fileBtn.disabled = true;
+    fileName.textContent = 'Reading ' + file.name + '…';
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataBase64 = reader.result.split(',')[1];
+      try {
+        const res = await fetch('/api/extract-doc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: file.name, dataBase64 })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          fileName.textContent = '';
+          fileBtn.disabled = false;
+          addMsg(data.error || 'Could not read that file.', 'system');
+          return;
+        }
+        documentText = data.text;
+        sessionStart = Date.now();
+        history = [];
+        fileName.textContent = '✓ ' + file.name + (data.truncated ? ' (truncated to fit demo)' : '');
+        document.getElementById('chatbot-upload').style.display = 'none';
+        addMsg('Document loaded. Ask a question about "' + file.name + '".', 'system');
+        input.disabled = false;
+        sendBtn.disabled = false;
+        input.placeholder = 'Ask about the document…';
+        input.focus();
+        updateMeta();
+      } catch (e) {
+        fileName.textContent = '';
+        fileBtn.disabled = false;
+        addMsg('Upload failed. Try again.', 'system');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text || !documentText) return;
+
+    addMsg(text, 'user');
+    history.push({ role: 'user', content: text });
+    input.value = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+
+    const thinking = addMsg('…', 'bot');
+
+    try {
+      const res = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          document: documentText,
+          history: history.slice(0, -1),
+          message: text,
+          sessionStart
+        })
+      });
+      const data = await res.json();
+      thinking.remove();
+
+      if (!res.ok) {
+        addMsg(data.error || 'Something went wrong.', 'system');
+        if (res.status === 429) {
+          input.disabled = true;
+          sendBtn.disabled = true;
+        } else {
+          input.disabled = false;
+          sendBtn.disabled = false;
+        }
+        return;
+      }
+
+      addMsg(data.reply, 'bot');
+      history.push({ role: 'assistant', content: data.reply });
+      updateMeta();
+
+      if (data.turnsUsed >= data.turnsMax) {
+        addMsg('Demo limit reached. Refresh the page to try again.', 'system');
+        input.disabled = true;
+        sendBtn.disabled = true;
+      } else {
+        input.disabled = false;
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    } catch (e) {
+      thinking.remove();
+      addMsg('Network error. Try again.', 'system');
+      input.disabled = false;
+      sendBtn.disabled = false;
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  setInterval(updateMeta, 15000);
+})();
 </script>
 </body>
 </html>
