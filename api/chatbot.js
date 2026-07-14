@@ -1,7 +1,10 @@
 const MAX_TURNS = 10; // user messages per demo session
 const MAX_SESSION_MS = 5 * 60 * 1000; // 5 minute demo window
 const MAX_MESSAGE_CHARS = 2000;
-const MODEL = 'claude-haiku-4-5-20251001';
+// Routed through Vercel AI Gateway (not api.anthropic.com directly) so every
+// request carries Vercel's negotiated zero-data-retention agreement with
+// Anthropic — see providerOptions.gateway.zeroDataRetention below.
+const MODEL = 'anthropic/claude-haiku-4-5';
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -43,9 +46,11 @@ module.exports = async (req, res) => {
     return res.status(429).json({ error: 'Demo session expired (5 minute limit). Refresh to start a new session.' });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    console.error('ANTHROPIC_API_KEY not set');
+  // AI_GATEWAY_API_KEY if set, otherwise fall back to the OIDC token Vercel
+  // auto-injects into functions on this project — no manual key needed.
+  const gatewayKey = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
+  if (!gatewayKey) {
+    console.error('No AI Gateway credential available');
     return res.status(500).json({ error: 'Server misconfigured' });
   }
 
@@ -67,10 +72,10 @@ ${document}
   ];
 
   try {
-    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
+    const aiRes = await fetch('https://ai-gateway.vercel.sh/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': apiKey,
+        'x-api-key': gatewayKey,
         'anthropic-version': '2023-06-01',
         'Content-Type': 'application/json'
       },
@@ -78,7 +83,10 @@ ${document}
         model: MODEL,
         max_tokens: 400,
         system: systemPrompt,
-        messages
+        messages,
+        providerOptions: {
+          gateway: { zeroDataRetention: true }
+        }
       })
     });
 
@@ -86,7 +94,7 @@ ${document}
       // Never log the response body — on some error types (e.g. content
       // policy) Anthropic echoes the offending user text back, and that
       // would leak into Vercel's log retention.
-      console.error('Anthropic API error, status:', aiRes.status);
+      console.error('AI Gateway error, status:', aiRes.status);
       return res.status(502).json({ error: 'Assistant is unavailable right now. Try again shortly.' });
     }
 
