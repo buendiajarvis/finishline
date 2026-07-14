@@ -83,8 +83,10 @@ ${document}
     });
 
     if (!aiRes.ok) {
-      const err = await aiRes.text();
-      console.error('Anthropic API error:', err);
+      // Never log the response body — on some error types (e.g. content
+      // policy) Anthropic echoes the offending user text back, and that
+      // would leak into Vercel's log retention.
+      console.error('Anthropic API error, status:', aiRes.status);
       return res.status(502).json({ error: 'Assistant is unavailable right now. Try again shortly.' });
     }
 
@@ -92,7 +94,8 @@ ${document}
     const reply = result.content?.[0]?.text || '';
     return res.status(200).json({ reply, turnsUsed: userTurns, turnsMax: MAX_TURNS });
   } catch (error) {
-    console.error('Chatbot call error:', error);
+    // Log only the error type/message, never request/response payloads.
+    console.error('Chatbot call error:', error?.message || 'unknown');
     return res.status(500).json({ error: 'Something went wrong. Try again.' });
   }
 };
