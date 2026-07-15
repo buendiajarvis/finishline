@@ -77,6 +77,13 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Invalid JSON' });
   }
 
+  // Restrict to same-site calls — this endpoint is not a public API.
+  // Browsers always send Origin on a cross-fetch POST from our own JS.
+  const origin = req.headers.origin || req.headers.referer || '';
+  if (!/^https:\/\/([a-z0-9-]+\.)*finishlinemsp\.com(\/|$)/i.test(origin)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   const { history, message, sessionStart } = data;
 
   if (!message || typeof message !== 'string') {
@@ -87,6 +94,12 @@ module.exports = async (req, res) => {
   }
 
   const turns = Array.isArray(history) ? history : [];
+  // Hard cap on raw entries too — MAX_TURNS below only counts role:"user"
+  // entries, so an oversized array of other shapes would otherwise slip
+  // through and inflate the prompt sent to the model.
+  if (turns.length > MAX_TURNS * 2) {
+    return res.status(400).json({ error: 'Conversation too long. Refresh to start a new chat.' });
+  }
   const userTurns = turns.filter(m => m.role === 'user').length + 1;
   if (userTurns > MAX_TURNS) {
     return res.status(429).json({ error: 'Session limit reached. Refresh to start a new chat.' });

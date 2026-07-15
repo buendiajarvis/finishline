@@ -1,6 +1,7 @@
 const MAX_TURNS = 10; // user messages per demo session
 const MAX_SESSION_MS = 5 * 60 * 1000; // 5 minute demo window
 const MAX_MESSAGE_CHARS = 2000;
+const MAX_DOCUMENT_CHARS = 45000; // extract-doc caps at 40k; a little slack, hard ceiling regardless of caller
 // Routed through Vercel AI Gateway (not api.anthropic.com directly) so every
 // request carries Vercel's negotiated zero-data-retention agreement with
 // Anthropic — see providerOptions.gateway.zeroDataRetention below.
@@ -25,10 +26,19 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Invalid JSON' });
   }
 
+  // Restrict to same-site calls — this endpoint is not a public API.
+  const origin = req.headers.origin || req.headers.referer || '';
+  if (!/^https:\/\/([a-z0-9-]+\.)*finishlinemsp\.com(\/|$)/i.test(origin)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   const { document, history, message, sessionStart } = data;
 
   if (!document || typeof document !== 'string') {
     return res.status(400).json({ error: 'Upload a document first.' });
+  }
+  if (document.length > MAX_DOCUMENT_CHARS) {
+    return res.status(400).json({ error: 'Document too large.' });
   }
   if (!message || typeof message !== 'string') {
     return res.status(400).json({ error: 'message is required' });
@@ -38,6 +48,9 @@ module.exports = async (req, res) => {
   }
 
   const turns = Array.isArray(history) ? history : [];
+  if (turns.length > MAX_TURNS * 2) {
+    return res.status(400).json({ error: 'Conversation too long. Refresh to start a new session.' });
+  }
   const userTurns = turns.filter(m => m.role === 'user').length + 1;
   if (userTurns > MAX_TURNS) {
     return res.status(429).json({ error: 'Demo limit reached (10 messages). Refresh to start a new session.' });
