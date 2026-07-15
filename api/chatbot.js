@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
-  const { document, history, message, sessionStart } = data;
+  const { document, history, message, sessionStart, email } = data;
 
   if (!document || typeof document !== 'string') {
     return res.status(400).json({ error: 'Upload a document first.' });
@@ -57,6 +57,31 @@ module.exports = async (req, res) => {
   }
   if (sessionStart && Date.now() - Number(sessionStart) > MAX_SESSION_MS) {
     return res.status(429).json({ error: 'Demo session expired (5 minute limit). Refresh to start a new session.' });
+  }
+
+  // Lead notification — fire once per session, on the first message only.
+  // Only the gated business email is sent, never chat/document content.
+  // Awaited (not fire-and-forget) since a serverless function can be frozen
+  // the instant the response is sent, killing any unawaited work.
+  if (userTurns === 1 && email && process.env.RESEND_API_KEY) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'FinishLine MSP <register@aiworx4me.com>',
+          to: ['phil@finishlinemsp.com'],
+          subject: 'New chatbot demo lead',
+          text: `Business email: ${email}\n\nStarted the homepage AI support demo just now.\n\n---\nfinishlinemsp.com`
+        })
+      });
+    } catch (e) {
+      console.error('Lead notification error:', e?.message || 'unknown');
+      // never block the chat on this
+    }
   }
 
   // AI_GATEWAY_API_KEY if set, otherwise fall back to the OIDC token Vercel

@@ -1148,17 +1148,29 @@ body {
   gap: var(--space-3);
 }
 
-.chatbot-upload {
+.chatbot-upload,
+.chatbot-gate {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   align-items: flex-start;
 }
 
-.chatbot-upload p {
+.chatbot-upload p,
+.chatbot-gate p {
   font-size: 13px;
   color: var(--on-surface-variant);
   line-height: 1.6;
+}
+
+.chatbot-gate .chatbot-input {
+  width: 100%;
+}
+
+.chatbot-gate-error {
+  font-size: 12px;
+  color: #ff8080;
+  line-height: 1.5;
 }
 
 .chatbot-file-btn {
@@ -1623,7 +1635,13 @@ document.getElementById('booking-form').addEventListener('submit', async functio
   </div>
 
   <div class="chatbot-body" id="chatbot-body">
-    <div class="chatbot-upload" id="chatbot-upload">
+    <div class="chatbot-gate" id="chatbot-gate">
+      <p>Enter your work email to try the demo — we don't accept free providers like Gmail or Yahoo.</p>
+      <input type="email" class="chatbot-input" id="chatbot-email-input" placeholder="you@company.com" autocomplete="email">
+      <button class="chatbot-file-btn" id="chatbot-email-submit">Continue</button>
+      <span class="chatbot-gate-error" id="chatbot-gate-error"></span>
+    </div>
+    <div class="chatbot-upload" id="chatbot-upload" style="display:none;">
       <p>Upload a document (.txt, .md, .pdf, .docx) and ask questions — the assistant only answers from what's in the file. Demo limit: 10 messages / 5 minutes. Nothing you upload is stored on our servers — it lives only in your browser tab for this session.</p>
       <input type="file" id="chatbot-file-input" accept=".txt,.md,.pdf,.docx" style="display:none;">
       <button class="chatbot-file-btn" id="chatbot-file-btn">Choose Document</button>
@@ -1644,6 +1662,11 @@ document.getElementById('booking-form').addEventListener('submit', async functio
   const panel = document.getElementById('chatbot-panel');
   const closeBtn = document.getElementById('chatbot-close');
   const body = document.getElementById('chatbot-body');
+  const gate = document.getElementById('chatbot-gate');
+  const emailInput = document.getElementById('chatbot-email-input');
+  const emailSubmit = document.getElementById('chatbot-email-submit');
+  const gateError = document.getElementById('chatbot-gate-error');
+  const uploadPanel = document.getElementById('chatbot-upload');
   const fileInput = document.getElementById('chatbot-file-input');
   const fileBtn = document.getElementById('chatbot-file-btn');
   const fileName = document.getElementById('chatbot-file-name');
@@ -1654,8 +1677,44 @@ document.getElementById('booking-form').addEventListener('submit', async functio
   let documentText = null;
   let history = [];
   let sessionStart = null;
+  let verifiedEmail = null;
   const MAX_TURNS = 10;
   const MAX_SESSION_MS = 5 * 60 * 1000;
+
+  async function submitEmail() {
+    const email = emailInput.value.trim();
+    if (!email) return;
+    emailSubmit.disabled = true;
+    emailSubmit.textContent = 'Checking…';
+    gateError.textContent = '';
+
+    try {
+      const res = await fetch('/api/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+
+      if (!data.valid) {
+        gateError.textContent = data.error || 'Enter a valid business email.';
+        emailSubmit.disabled = false;
+        emailSubmit.textContent = 'Continue';
+        return;
+      }
+
+      verifiedEmail = email;
+      gate.style.display = 'none';
+      uploadPanel.style.display = 'flex';
+    } catch (e) {
+      gateError.textContent = 'Network error. Try again.';
+      emailSubmit.disabled = false;
+      emailSubmit.textContent = 'Continue';
+    }
+  }
+
+  emailSubmit.addEventListener('click', submitEmail);
+  emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitEmail(); });
 
   function addMsg(text, cls) {
     const div = document.createElement('div');
@@ -1752,7 +1811,8 @@ document.getElementById('booking-form').addEventListener('submit', async functio
           document: documentText,
           history: history.slice(0, -1),
           message: text,
-          sessionStart
+          sessionStart,
+          email: verifiedEmail
         })
       });
       const data = await res.json();
