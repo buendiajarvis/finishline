@@ -74,5 +74,24 @@ module.exports = async (req, res) => {
     return res.status(200).json({ valid: false, reason: 'lookup_failed', error: "Couldn't verify that domain. Try again." });
   }
 
+  // Log the verified lead to Google Sheets. Best-effort: a Sheets outage
+  // never blocks the visitor from proceeding to the chat.
+  const sheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+  if (sheetsUrl) {
+    try {
+      // Apps Script's doPost redirects (302) to serve the response, and that
+      // redirect target only accepts GET — fetch() follows redirects and
+      // auto-downgrades POST to GET on 302 per the WHATWG spec, same as a
+      // browser, so this "just works" without any special handling.
+      await fetch(sheetsUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' }, // avoids a CORS-preflight-shaped request
+        body: JSON.stringify({ source: 'homepage-chatbot', email })
+      });
+    } catch (error) {
+      console.error('Sheets webhook error:', error?.message || 'unknown');
+    }
+  }
+
   return res.status(200).json({ valid: true });
 };
