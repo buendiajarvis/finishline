@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Try It Now — Automated Support Department | FinishLine MSP</title>
+<meta name="description" content="No email required. Upload any document or paste a URL and ask FinishLine's Automated Support Department questions right now — it answers only from what you give it.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Open Graph / Twitter -->
+<meta property="og:title" content="Try FinishLine's Automated Support Department — No Email Needed">
+<meta property="og:description" content="Upload a document or paste a URL. Ask it anything. It only answers from what you gave it — zero-error, infinite-capacity support, live in your browser, right now.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://finishlinemsp.com/try">
+<meta property="og:image" content="https://finishlinemsp.com/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Try FinishLine's Automated Support Department — No Email Needed">
+<meta name="twitter:description" content="Upload a document or paste a URL. Ask it anything. It only answers from what you gave it — zero-error, infinite-capacity support, live in your browser, right now.">
+<meta name="twitter:image" content="https://finishlinemsp.com/favicon.svg">
+
+<style>
+/* ============================================================
+   FINISHLINE DESIGN TOKENS — from DESIGN.md
+   ============================================================ */
+:root {
+  --surface: #0c1324;
+  --surface-bright: #33394c;
+  --surface-container-lowest: #070d1f;
+  --surface-container-low: #151b2d;
+  --surface-container: #191f31;
+  --on-surface: #dce1fb;
+  --on-surface-variant: #b9cacb;
+  --outline: #849495;
+  --outline-variant: #3b494b;
+  --surface-tint: #00dbe9;
+  --on-primary: #00363a;
+  --primary-container: #00f0ff;
+  --background: #0c1324;
+
+  --ff-display: 'Hanken Grotesk', system-ui, sans-serif;
+  --ff-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --fs-display-lg: 48px;
+  --fs-headline-md: 24px;
+  --fs-body-md: 16px;
+  --fs-mono-label: 12px;
+  --fs-mono-data: 14px;
+
+  --lh-display-lg: 1.1;
+  --lh-headline-md: 1.3;
+  --lh-body-md: 1.6;
+  --lh-mono-label: 1.5;
+
+  --ls-display-lg: -0.02em;
+  --ls-headline-md: -0.01em;
+  --ls-mono-label: 0.05em;
+  --ls-body-md: 0em;
+
+  --gutter: 24px;
+  --margin-desktop: 64px;
+  --margin-mobile: 20px;
+  --container-max: 1440px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  --glow-cyan-strong: 0 0 30px rgba(0, 219, 233, 0.15);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: var(--ff-display);
+  font-size: var(--fs-body-md);
+  font-weight: 400;
+  line-height: var(--lh-body-md);
+  letter-spacing: var(--ls-body-md);
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+  width: 100%;
+}
+
+.section-label {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  line-height: var(--lh-mono-label);
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+  display: block;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(12, 19, 36, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.nav-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.nav-brand { display: flex; align-items: center; gap: var(--space-3); text-decoration: none; }
+
+.nav-logo {
+  width: 8px;
+  height: 8px;
+  background: var(--primary-container);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+.nav-name {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  font-weight: 500;
+  color: var(--on-surface);
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+}
+
+.nav-cta {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  padding: var(--space-2) var(--space-4);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: box-shadow 0.2s ease;
+}
+
+.nav-cta:hover { box-shadow: var(--glow-cyan-strong); }
+
+/* ============================================================
+   DEMO LAYOUT
+   ============================================================ */
+.demo {
+  flex: 1 0 auto;
+  padding-top: calc(56px + var(--space-20));
+  padding-bottom: var(--space-24);
+}
+
+.demo-head {
+  max-width: 680px;
+  margin: 0 auto var(--space-16);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.demo-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-display-lg);
+  font-weight: 700;
+  line-height: var(--lh-display-lg);
+  letter-spacing: var(--ls-display-lg);
+  color: var(--on-surface);
+}
+
+.demo-subtitle {
+  font-size: 18px;
+  color: var(--on-surface-variant);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gutter);
+  align-items: start;
+}
+
+.demo-steps { grid-column: 1 / 5; display: flex; flex-direction: column; gap: var(--space-6); }
+
+.step {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+  opacity: 0.45;
+}
+
+.step.active { opacity: 1; border-color: rgba(0, 240, 255, 0.35); }
+.step.done { opacity: 0.75; }
+
+.step-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--on-primary);
+  background: var(--outline-variant);
+}
+
+.step.active .step-num,
+.step.done .step-num { background: var(--primary-container); }
+
+.step-body { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.step-title {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.step-desc { font-size: 14px; color: var(--on-surface-variant); line-height: 1.6; }
+
+.demo-panel {
+  grid-column: 5 / 13;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  display: flex;
+  flex-direction: column;
+  height: 640px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.demo-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--outline-variant);
+  flex-shrink: 0;
+}
+
+.demo-panel-title {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.demo-panel-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--primary-container);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.6);
+}
+
+.demo-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.demo-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: flex-start;
+  max-width: 440px;
+}
+
+.demo-upload p {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  line-height: 1.65;
+}
+
+.demo-row { display: flex; gap: var(--space-3); width: 100%; }
+
+.demo-input {
+  flex: 1;
+  font-family: var(--ff-display);
+  font-size: var(--fs-body-md);
+  color: var(--on-surface);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-3) var(--space-4);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.demo-input:focus { border-color: var(--primary-container); }
+.demo-input:disabled { opacity: 0.5; }
+
+.demo-btn {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--on-primary);
+  background: var(--primary-container);
+  border: none;
+  padding: var(--space-3) var(--space-6);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: box-shadow 0.2s ease;
+}
+
+.demo-btn:hover { box-shadow: var(--glow-cyan-strong); }
+.demo-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+.demo-btn-outline {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--primary-container);
+  background: transparent;
+  border: 1px solid var(--primary-container);
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
+}
+
+.demo-btn-outline:hover { background: rgba(0, 240, 255, 0.08); }
+.demo-btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.demo-file-name {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--on-surface-variant);
+}
+
+.demo-source-tabs { display: flex; gap: var(--space-2); }
+
+.demo-tab {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+}
+
+.demo-tab.active { color: var(--surface-tint); border-color: rgba(0, 240, 255, 0.35); }
+
+.demo-source-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.demo-msg {
+  max-width: 84%;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: var(--space-3) var(--space-4);
+}
+
+.demo-msg.user {
+  align-self: flex-end;
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--on-surface);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+}
+
+.demo-msg.bot {
+  align-self: flex-start;
+  background: var(--surface-container);
+  color: var(--on-surface);
+  border: 1px solid var(--outline-variant);
+}
+
+.demo-msg.system {
+  align-self: center;
+  color: var(--outline);
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  background: none;
+  border: none;
+  text-align: center;
+  padding: var(--space-1) 0;
+}
+
+.demo-foot {
+  border-top: 1px solid var(--outline-variant);
+  padding: var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.demo-meta {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--outline);
+  padding: 0 var(--space-5) var(--space-3);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  flex-shrink: 0;
+  padding: var(--space-10) 0;
+  border-top: 1px solid var(--outline-variant);
+}
+
+.footer-inner { display: flex; align-items: center; justify-content: space-between; }
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.footer-dot { width: 6px; height: 6px; background: var(--primary-container); }
+
+.footer-links { display: flex; gap: var(--space-8); list-style: none; }
+
+.footer-links a {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.footer-links a:hover { color: var(--primary-container); }
+
+.footer-location {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root { --fs-display-lg: 36px; }
+  .container { padding: 0 var(--space-6); }
+  .nav-inner { padding: 0 var(--space-6); }
+  .demo-steps { grid-column: 1 / -1; flex-direction: row; overflow-x: auto; }
+  .step { min-width: 260px; }
+  .demo-panel { grid-column: 1 / -1; margin-top: var(--space-6); height: 600px; }
+}
+
+@media (max-width: 640px) {
+  :root { --fs-display-lg: 30px; }
+  .container { padding: 0 var(--margin-mobile); }
+  .nav-inner { padding: 0 var(--margin-mobile); }
+  .demo { padding-top: calc(56px + var(--space-12)); }
+  .demo-steps { flex-direction: column; }
+  .step { min-width: 0; }
+  .demo-row { flex-direction: column; }
+  .demo-btn { align-self: flex-start; }
+  .footer-inner { flex-direction: column; gap: var(--space-6); text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: var(--space-4); }
+}
+</style>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D9G7BHTCJ8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D9G7BHTCJ8');
+</script>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo"></div>
+      <span class="nav-name">FinishLine</span>
+    </a>
+    <a href="/msp/contact" class="nav-cta">Talk to Us</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     DEMO (ungated — no email required)
+     ============================================================ -->
+<section class="demo">
+  <div class="container">
+
+    <div class="demo-head">
+      <span class="section-label">Try It Now — No Email</span>
+      <h1 class="demo-title">Test the Automated Support Department right now.</h1>
+      <p class="demo-subtitle">
+        Upload a document or paste a URL, then ask it questions — it answers
+        strictly from what you gave it, and says so plainly when the answer
+        isn't in there. That's the whole pitch: zero errors outside its
+        brief, zero headcount to manage.
+      </p>
+    </div>
+
+    <div class="demo-grid">
+
+      <div class="demo-steps">
+        <div class="step active" id="step-1">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <span class="step-title">Give it a source</span>
+            <p class="step-desc">Upload a document (.txt, .md, .pdf, .docx, up to 3MB) or paste a URL and it'll crawl a few linked pages instead. Nothing you upload is stored; it lives only in your browser tab.</p>
+          </div>
+        </div>
+        <div class="step" id="step-2">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <span class="step-title">Ask it anything</span>
+            <p class="step-desc">Ask something the source actually answers, then ask something it doesn't cover. Watch it refuse to guess on the second one — that refusal is the product.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-panel">
+        <div class="demo-panel-head">
+          <span class="demo-panel-title">◈ Automated Support Department</span>
+          <div class="demo-panel-dot"></div>
+        </div>
+
+        <div class="demo-body" id="demo-body">
+          <div class="demo-upload" id="demo-upload">
+            <p>Give it a source. It will answer only from what you provide here — nothing invented, nothing outside scope. Preview limit: 10 messages / 5 minutes.</p>
+            <div class="demo-source-tabs" id="demo-source-tabs">
+              <button type="button" class="demo-tab active" id="demo-tab-file">Upload document</button>
+              <button type="button" class="demo-tab" id="demo-tab-url">Paste a URL</button>
+            </div>
+            <div class="demo-source-pane" id="demo-source-file">
+              <input type="file" id="demo-file-input" accept=".txt,.md,.pdf,.docx" style="display:none;">
+              <button class="demo-btn-outline" id="demo-file-btn">Choose Document</button>
+              <span class="demo-file-name" id="demo-file-name"></span>
+            </div>
+            <div class="demo-source-pane" id="demo-source-url" style="display:none;">
+              <div class="demo-row">
+                <input type="text" class="demo-input" id="demo-url-input" placeholder="https://example.com/docs">
+                <button class="demo-btn-outline" id="demo-url-btn">Fetch Page</button>
+              </div>
+              <span class="demo-file-name" id="demo-url-status"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-meta" id="demo-meta"></div>
+        <div class="demo-foot">
+          <input type="text" class="demo-input" id="demo-input" placeholder="Upload a document to start…" disabled>
+          <button class="demo-btn" id="demo-send" disabled>Send</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <a href="/" class="footer-brand">
+        <div class="footer-dot"></div>
+        FINISHLINE
+      </a>
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/msp/contact">Contact</a></li>
+      </ul>
+      <span class="footer-location">San Francisco · New York · London · Taipei · Manila</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const uploadPanel = document.getElementById('demo-upload');
+  const fileInput = document.getElementById('demo-file-input');
+  const fileBtn = document.getElementById('demo-file-btn');
+  const fileName = document.getElementById('demo-file-name');
+  const body = document.getElementById('demo-body');
+  const input = document.getElementById('demo-input');
+  const sendBtn = document.getElementById('demo-send');
+  const meta = document.getElementById('demo-meta');
+
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('step-2');
+
+  let documentText = null;
+  let history = [];
+  let sessionStart = null;
+  const MAX_TURNS = 10;
+  const MAX_SESSION_MS = 5 * 60 * 1000;
+
+  function addMsg(text, cls) {
+    const div = document.createElement('div');
+    div.className = 'demo-msg ' + cls;
+    div.textContent = text;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+    return div;
+  }
+
+  function updateMeta() {
+    if (!sessionStart) { meta.textContent = ''; return; }
+    const turnsLeft = Math.max(0, MAX_TURNS - history.filter(m => m.role === 'user').length);
+    const msLeft = Math.max(0, MAX_SESSION_MS - (Date.now() - sessionStart));
+    const minLeft = Math.ceil(msLeft / 60000);
+    meta.textContent = `${turnsLeft} messages left · demo session ends in ~${minLeft} min`;
+  }
+
+  function sourceLoaded(text, label, truncated) {
+    documentText = text;
+    sessionStart = Date.now();
+    history = [];
+    uploadPanel.style.display = 'none';
+    step1.classList.remove('active');
+    step1.classList.add('done');
+    step2.classList.add('active');
+    addMsg('Loaded. Ask a question about "' + label + '".' + (truncated ? ' (truncated to fit demo)' : ''), 'system');
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.placeholder = 'Ask about the source…';
+    input.focus();
+    updateMeta();
+
+    if (typeof gtag === 'function') gtag('event', 'generate_lead', { form: 'try_source_loaded' });
+  }
+
+  // Source tabs — upload document vs. paste a URL
+  const tabFile = document.getElementById('demo-tab-file');
+  const tabUrl = document.getElementById('demo-tab-url');
+  const paneFile = document.getElementById('demo-source-file');
+  const paneUrl = document.getElementById('demo-source-url');
+  const urlInput = document.getElementById('demo-url-input');
+  const urlBtn = document.getElementById('demo-url-btn');
+  const urlStatus = document.getElementById('demo-url-status');
+
+  tabFile.addEventListener('click', () => {
+    tabFile.classList.add('active');
+    tabUrl.classList.remove('active');
+    paneFile.style.display = 'flex';
+    paneUrl.style.display = 'none';
+  });
+  tabUrl.addEventListener('click', () => {
+    tabUrl.classList.add('active');
+    tabFile.classList.remove('active');
+    paneUrl.style.display = 'flex';
+    paneFile.style.display = 'none';
+  });
+
+  fileBtn.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    if (file.size > 3 * 1024 * 1024) {
+      addMsg('That file is too large for the demo (3MB max).', 'system');
+      return;
+    }
+
+    fileBtn.disabled = true;
+    fileName.textContent = 'Reading ' + file.name + '…';
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataBase64 = reader.result.split(',')[1];
+      try {
+        const res = await fetch('/api/extract-doc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: file.name, dataBase64 })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          fileName.textContent = '';
+          fileBtn.disabled = false;
+          addMsg(data.error || 'Could not read that file.', 'system');
+          return;
+        }
+        fileName.textContent = '✓ ' + file.name + (data.truncated ? ' (truncated to fit demo)' : '');
+        sourceLoaded(data.text, file.name, data.truncated);
+      } catch (e) {
+        fileName.textContent = '';
+        fileBtn.disabled = false;
+        addMsg('Upload failed. Try again.', 'system');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+
+  async function fetchUrl() {
+    const url = urlInput.value.trim();
+    if (!url) return;
+
+    let hostLabel = url;
+    try { hostLabel = new URL(/^https?:\/\//i.test(url) ? url : 'https://' + url).hostname; } catch (e) {}
+
+    urlBtn.disabled = true;
+    urlInput.disabled = true;
+    urlStatus.textContent = 'Reading ' + hostLabel + '… (crawling a few linked pages, up to ~10s)';
+
+    try {
+      const res = await fetch('/api/extract-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        urlStatus.textContent = '';
+        urlBtn.disabled = false;
+        urlInput.disabled = false;
+        addMsg(data.error || 'Could not fetch that page.', 'system');
+        return;
+      }
+      urlStatus.textContent = '✓ ' + data.title + (data.truncated ? ' (truncated to fit demo)' : '');
+      const label = (data.pages && data.pages.length > 1)
+        ? data.title + ' — ' + data.pages.map(p => p.title).join(', ')
+        : data.title;
+      sourceLoaded(data.text, label, data.truncated);
+    } catch (e) {
+      urlStatus.textContent = '';
+      urlBtn.disabled = false;
+      urlInput.disabled = false;
+      addMsg('Network error. Try again.', 'system');
+    }
+  }
+
+  urlBtn.addEventListener('click', fetchUrl);
+  urlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') fetchUrl(); });
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text || !documentText) return;
+
+    addMsg(text, 'user');
+    history.push({ role: 'user', content: text });
+    input.value = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+
+    const thinking = addMsg('…', 'bot');
+
+    try {
+      const res = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          document: documentText,
+          history: history.slice(0, -1),
+          message: text,
+          sessionStart
+        })
+      });
+      const data = await res.json();
+      thinking.remove();
+
+      if (!res.ok) {
+        addMsg(data.error || 'Something went wrong.', 'system');
+        if (res.status === 429) {
+          input.disabled = true;
+          sendBtn.disabled = true;
+        } else {
+          input.disabled = false;
+          sendBtn.disabled = false;
+        }
+        return;
+      }
+
+      addMsg(data.reply, 'bot');
+      history.push({ role: 'assistant', content: data.reply });
+      updateMeta();
+
+      if (data.turnsUsed >= data.turnsMax) {
+        addMsg('Demo limit reached. Refresh the page to try again.', 'system');
+        input.disabled = true;
+        sendBtn.disabled = true;
+      } else {
+        input.disabled = false;
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    } catch (e) {
+      thinking.remove();
+      addMsg('Network error. Try again.', 'system');
+      input.disabled = false;
+      sendBtn.disabled = false;
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+})();
+</script>
+</body>
+</html>
