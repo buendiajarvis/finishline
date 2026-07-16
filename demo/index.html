@@ -388,6 +388,30 @@ body {
   color: var(--on-surface-variant);
 }
 
+.demo-source-tabs { display: flex; gap: var(--space-2); }
+
+.demo-tab {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+}
+
+.demo-tab.active { color: var(--surface-tint); border-color: rgba(0, 240, 255, 0.35); }
+
+.demo-source-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
 .demo-msg {
   max-width: 84%;
   font-size: 14px;
@@ -567,8 +591,8 @@ body {
         <div class="step" id="step-2">
           <div class="step-num">2</div>
           <div class="step-body">
-            <span class="step-title">Upload a document of your choice</span>
-            <p class="step-desc">Pick anything — an FAQ, a policy doc, a product manual, a README. .txt, .md, .pdf, or .docx, up to 3MB. Nothing you upload is stored; it lives only in your browser tab.</p>
+            <span class="step-title">Give it a source</span>
+            <p class="step-desc">Upload a document (.txt, .md, .pdf, .docx, up to 3MB) or paste a URL and it'll crawl that one page instead. Nothing you upload is stored; it lives only in your browser tab.</p>
           </div>
         </div>
         <div class="step" id="step-3">
@@ -597,10 +621,23 @@ body {
           </div>
 
           <div class="demo-upload" id="demo-upload" style="display:none;">
-            <p>Now give it your own documentation. It will answer only from what you upload here — nothing invented, nothing outside scope. Preview limit: 10 messages / 5 minutes.</p>
-            <input type="file" id="demo-file-input" accept=".txt,.md,.pdf,.docx" style="display:none;">
-            <button class="demo-btn-outline" id="demo-file-btn">Choose Document</button>
-            <span class="demo-file-name" id="demo-file-name"></span>
+            <p>Now give it a source. It will answer only from what you provide here — nothing invented, nothing outside scope. Preview limit: 10 messages / 5 minutes.</p>
+            <div class="demo-source-tabs" id="demo-source-tabs">
+              <button type="button" class="demo-tab active" id="demo-tab-file">Upload document</button>
+              <button type="button" class="demo-tab" id="demo-tab-url">Paste a URL</button>
+            </div>
+            <div class="demo-source-pane" id="demo-source-file">
+              <input type="file" id="demo-file-input" accept=".txt,.md,.pdf,.docx" style="display:none;">
+              <button class="demo-btn-outline" id="demo-file-btn">Choose Document</button>
+              <span class="demo-file-name" id="demo-file-name"></span>
+            </div>
+            <div class="demo-source-pane" id="demo-source-url" style="display:none;">
+              <div class="demo-row">
+                <input type="text" class="demo-input" id="demo-url-input" placeholder="https://example.com/docs">
+                <button class="demo-btn-outline" id="demo-url-btn">Fetch Page</button>
+              </div>
+              <span class="demo-file-name" id="demo-url-status"></span>
+            </div>
           </div>
         </div>
 
@@ -717,6 +754,44 @@ body {
     meta.textContent = `${turnsLeft} messages left · demo session ends in ~${minLeft} min`;
   }
 
+  function sourceLoaded(text, label, truncated) {
+    documentText = text;
+    sessionStart = Date.now();
+    history = [];
+    uploadPanel.style.display = 'none';
+    step2.classList.remove('active');
+    step2.classList.add('done');
+    step3.classList.add('active');
+    addMsg('Loaded. Ask a question about "' + label + '".' + (truncated ? ' (truncated to fit demo)' : ''), 'system');
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.placeholder = 'Ask about the source…';
+    input.focus();
+    updateMeta();
+  }
+
+  // Source tabs — upload document vs. paste a URL
+  const tabFile = document.getElementById('demo-tab-file');
+  const tabUrl = document.getElementById('demo-tab-url');
+  const paneFile = document.getElementById('demo-source-file');
+  const paneUrl = document.getElementById('demo-source-url');
+  const urlInput = document.getElementById('demo-url-input');
+  const urlBtn = document.getElementById('demo-url-btn');
+  const urlStatus = document.getElementById('demo-url-status');
+
+  tabFile.addEventListener('click', () => {
+    tabFile.classList.add('active');
+    tabUrl.classList.remove('active');
+    paneFile.style.display = 'flex';
+    paneUrl.style.display = 'none';
+  });
+  tabUrl.addEventListener('click', () => {
+    tabUrl.classList.add('active');
+    tabFile.classList.remove('active');
+    paneUrl.style.display = 'flex';
+    paneFile.style.display = 'none';
+  });
+
   fileBtn.addEventListener('click', () => fileInput.click());
 
   fileInput.addEventListener('change', async () => {
@@ -747,20 +822,8 @@ body {
           addMsg(data.error || 'Could not read that file.', 'system');
           return;
         }
-        documentText = data.text;
-        sessionStart = Date.now();
-        history = [];
         fileName.textContent = '✓ ' + file.name + (data.truncated ? ' (truncated to fit demo)' : '');
-        uploadPanel.style.display = 'none';
-        step2.classList.remove('active');
-        step2.classList.add('done');
-        step3.classList.add('active');
-        addMsg('Document loaded. Ask a question about "' + file.name + '".', 'system');
-        input.disabled = false;
-        sendBtn.disabled = false;
-        input.placeholder = 'Ask about the document…';
-        input.focus();
-        updateMeta();
+        sourceLoaded(data.text, file.name, data.truncated);
       } catch (e) {
         fileName.textContent = '';
         fileBtn.disabled = false;
@@ -769,6 +832,41 @@ body {
     };
     reader.readAsDataURL(file);
   });
+
+  async function fetchUrl() {
+    const url = urlInput.value.trim();
+    if (!url) return;
+
+    urlBtn.disabled = true;
+    urlInput.disabled = true;
+    urlStatus.textContent = 'Fetching…';
+
+    try {
+      const res = await fetch('/api/extract-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        urlStatus.textContent = '';
+        urlBtn.disabled = false;
+        urlInput.disabled = false;
+        addMsg(data.error || 'Could not fetch that page.', 'system');
+        return;
+      }
+      urlStatus.textContent = '✓ ' + data.title + (data.truncated ? ' (truncated to fit demo)' : '');
+      sourceLoaded(data.text, data.title, data.truncated);
+    } catch (e) {
+      urlStatus.textContent = '';
+      urlBtn.disabled = false;
+      urlInput.disabled = false;
+      addMsg('Network error. Try again.', 'system');
+    }
+  }
+
+  urlBtn.addEventListener('click', fetchUrl);
+  urlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') fetchUrl(); });
 
   async function sendMessage() {
     const text = input.value.trim();
