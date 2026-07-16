@@ -837,9 +837,12 @@ body {
     const url = urlInput.value.trim();
     if (!url) return;
 
+    let hostLabel = url;
+    try { hostLabel = new URL(/^https?:\/\//i.test(url) ? url : 'https://' + url).hostname; } catch (e) {}
+
     urlBtn.disabled = true;
     urlInput.disabled = true;
-    urlStatus.textContent = 'Fetching…';
+    urlStatus.textContent = 'Reading ' + hostLabel + '… (crawling a few linked pages, up to ~10s)';
 
     try {
       const res = await fetch('/api/extract-url', {
@@ -856,7 +859,10 @@ body {
         return;
       }
       urlStatus.textContent = '✓ ' + data.title + (data.truncated ? ' (truncated to fit demo)' : '');
-      sourceLoaded(data.text, data.title, data.truncated);
+      const label = (data.pages && data.pages.length > 1)
+        ? data.title + ' — ' + data.pages.map(p => p.title).join(', ')
+        : data.title;
+      sourceLoaded(data.text, label, data.truncated);
     } catch (e) {
       urlStatus.textContent = '';
       urlBtn.disabled = false;
