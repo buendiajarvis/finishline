@@ -195,8 +195,16 @@ async function fetchWithGuard(targetUrl, redirectsLeft, timeoutMs) {
 // Pull same-domain links out of the seed page's raw HTML, score them by how
 // likely a demo visitor is to ask about that page, and return the top N —
 // this is depth-1 only, we never follow links found on a secondary page.
+// Canonicalize for dedup only (never for the actual fetch) — nav and footer
+// often link the same page via a trailing slash or a tracking query string,
+// and without this each variant burns a separate crawl slot on identical
+// content.
+function canonicalize(url) {
+  return url.hostname.toLowerCase() + (url.pathname.replace(/\/+$/, '') || '/');
+}
+
 function extractPriorityLinks(html, baseUrl, limit) {
-  const seen = new Set([baseUrl.toString()]);
+  const seen = new Set([canonicalize(baseUrl)]);
   const candidates = [];
   const anchorRe = /<a\s+[^>]*href\s*=\s*["']([^"'#]+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   let match;
@@ -216,7 +224,7 @@ function extractPriorityLinks(html, baseUrl, limit) {
     if (linkUrl.hostname !== baseUrl.hostname) continue; // same-domain only
     if (SKIP_EXTENSIONS.test(linkUrl.pathname)) continue;
 
-    const key = linkUrl.toString();
+    const key = canonicalize(linkUrl);
     if (seen.has(key)) continue;
     seen.add(key);
 
@@ -231,9 +239,19 @@ function extractPriorityLinks(html, baseUrl, limit) {
   return candidates.slice(0, limit).map(c => c.url);
 }
 
+function decodeEntities(str) {
+  return str
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
 function extractTitle(html, fallback) {
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
-  return titleMatch ? titleMatch[1].trim().slice(0, 200) : fallback;
+  return titleMatch ? decodeEntities(titleMatch[1]).trim().slice(0, 200) : fallback;
 }
 
 async function fetchPage(url, timeoutMs) {
@@ -345,8 +363,12 @@ module.exports = async (req, res) => {
       const settled = await Promise.allSettled(
         links.map(link => fetchPage(link, perPageTimeout))
       );
+      const seenTitles = new Set([seed.title.toLowerCase()]);
       for (const outcome of settled) {
         if (outcome.status === 'fulfilled') {
+          const titleKey = outcome.value.title.toLowerCase();
+          if (seenTitles.has(titleKey)) continue; // same content under a different path
+          seenTitles.add(titleKey);
           pages.push({
             url: outcome.value.url,
             title: outcome.value.title,

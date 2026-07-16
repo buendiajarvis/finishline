@@ -1,7 +1,7 @@
 const MAX_TURNS = 10; // user messages per demo session
 const MAX_SESSION_MS = 5 * 60 * 1000; // 5 minute demo window
 const MAX_MESSAGE_CHARS = 2000;
-const MAX_DOCUMENT_CHARS = 45000; // extract-doc caps at 40k; a little slack, hard ceiling regardless of caller
+const MAX_DOCUMENT_CHARS = 85000; // extract-doc caps at 40k, extract-url's multi-page crawl at 80k; a little slack, hard ceiling regardless of caller
 // Routed through Vercel AI Gateway (not api.anthropic.com directly) so every
 // request carries Vercel's negotiated zero-data-retention agreement with
 // Anthropic — see providerOptions.gateway.zeroDataRetention below.
