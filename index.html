@@ -271,6 +271,10 @@ body {
   color: var(--primary-container);
 }
 
+.nav-links a.nav-alert {
+  color: var(--error);
+}
+
 .nav-cta {
   font-family: var(--ff-mono);
   font-size: var(--fs-mono-label);
@@ -1194,6 +1198,33 @@ body {
   color: var(--on-surface-variant);
 }
 
+.chatbot-row { display: flex; gap: var(--space-2); width: 100%; }
+.chatbot-row .chatbot-input { min-width: 0; }
+
+.chatbot-source-tabs { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.chatbot-tab {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+}
+
+.chatbot-tab.active { color: var(--surface-tint); border-color: rgba(0, 240, 255, 0.35); }
+
+.chatbot-source-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
 .chatbot-msg {
   max-width: 88%;
   font-size: 13px;
@@ -1290,14 +1321,14 @@ body {
      ============================================================ -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-brand">
-      <div class="nav-logo"></div>
-      <span class="nav-name">FinishLine</span>
+    <a href="#" class="nav-brand" aria-label="finishline | MSP">
+      <img src="/brand/finishline-msp-transparent.svg" alt="finishline | MSP" width="174" height="24" style="display:block;height:24px;width:auto;">
     </a>
     <ul class="nav-links">
       <li><a href="#capabilities">Capabilities</a></li>
       <li><a href="#approach">Approach</a></li>
       <li><a href="#intelligence">Intelligence</a></li>
+      <li><a href="under-attack.html" class="nav-alert">Under attack</a></li>
     </ul>
     <a href="#engage" class="nav-cta">Engage</a>
   </div>
@@ -1580,8 +1611,7 @@ body {
   <div class="container">
     <div class="footer-inner">
       <div class="footer-brand">
-        <div class="footer-dot"></div>
-        FINISHLINE
+        <img src="/brand/finishline-msp-transparent.svg" alt="finishline | MSP" width="145" height="20" style="display:block;height:20px;width:auto;opacity:.9;">
       </div>
       <ul class="footer-links">
         <li><a href="#">Careers</a></li>
@@ -1636,16 +1666,29 @@ document.getElementById('booking-form').addEventListener('submit', async functio
 
   <div class="chatbot-body" id="chatbot-body">
     <div class="chatbot-gate" id="chatbot-gate">
-      <p>This is a fully staffed support department — no hires, no training, no ramp time. Enter your work email to see it work (we don't accept free providers like Gmail or Yahoo).</p>
+      <p>This is a fully staffed support department — no hires, no training, no ramp time. Enter your work email to begin (we don't accept free providers like Gmail or Yahoo).</p>
       <input type="email" class="chatbot-input" id="chatbot-email-input" placeholder="you@company.com" autocomplete="email">
-      <button class="chatbot-file-btn" id="chatbot-email-submit">Continue</button>
+      <button class="chatbot-file-btn" id="chatbot-email-submit">Continue →</button>
       <span class="chatbot-gate-error" id="chatbot-gate-error"></span>
     </div>
     <div class="chatbot-upload" id="chatbot-upload" style="display:none;">
-      <p>Give it your own documentation (.txt, .md, .pdf, .docx) and it answers only from what you gave it — nothing invented, nothing outside scope. That's the whole department: zero errors outside its brief, zero headcount to manage. Preview limit: 10 messages / 5 minutes. Nothing you upload is stored — it lives only in your browser tab.</p>
-      <input type="file" id="chatbot-file-input" accept=".txt,.md,.pdf,.docx" style="display:none;">
-      <button class="chatbot-file-btn" id="chatbot-file-btn">Choose Document</button>
-      <span class="chatbot-file-name" id="chatbot-file-name"></span>
+      <p>Now give it a source. It will answer only from what you provide here — nothing invented, nothing outside scope. Preview limit: 10 messages / 5 minutes. Nothing you upload is stored — it lives only in your browser tab.</p>
+      <div class="chatbot-source-tabs" id="chatbot-source-tabs">
+        <button type="button" class="chatbot-tab active" id="chatbot-tab-file">Upload document</button>
+        <button type="button" class="chatbot-tab" id="chatbot-tab-url">Paste a URL</button>
+      </div>
+      <div class="chatbot-source-pane" id="chatbot-source-file">
+        <input type="file" id="chatbot-file-input" accept=".txt,.md,.pdf,.docx" style="display:none;">
+        <button class="chatbot-file-btn" id="chatbot-file-btn">Choose Document</button>
+        <span class="chatbot-file-name" id="chatbot-file-name"></span>
+      </div>
+      <div class="chatbot-source-pane" id="chatbot-source-url" style="display:none;">
+        <div class="chatbot-row">
+          <input type="text" class="chatbot-input" id="chatbot-url-input" placeholder="https://example.com/docs">
+          <button class="chatbot-file-btn" id="chatbot-url-btn">Fetch Page</button>
+        </div>
+        <span class="chatbot-file-name" id="chatbot-url-status"></span>
+      </div>
     </div>
   </div>
 
@@ -1699,17 +1742,19 @@ document.getElementById('booking-form').addEventListener('submit', async functio
       if (!data.valid) {
         gateError.textContent = data.error || 'Enter a valid business email.';
         emailSubmit.disabled = false;
-        emailSubmit.textContent = 'Continue';
+        emailSubmit.textContent = 'Continue →';
         return;
       }
 
       verifiedEmail = email;
       gate.style.display = 'none';
       uploadPanel.style.display = 'flex';
+
+      if (typeof gtag === 'function') gtag('event', 'generate_lead', { form: 'widget_email_gate' });
     } catch (e) {
       gateError.textContent = 'Network error. Try again.';
       emailSubmit.disabled = false;
-      emailSubmit.textContent = 'Continue';
+      emailSubmit.textContent = 'Continue →';
     }
   }
 
@@ -1732,6 +1777,82 @@ document.getElementById('booking-form').addEventListener('submit', async functio
     const minLeft = Math.ceil(msLeft / 60000);
     meta.textContent = `${turnsLeft} messages left · demo session ends in ~${minLeft} min`;
   }
+
+  function sourceLoaded(text, label, truncated) {
+    documentText = text;
+    sessionStart = Date.now();
+    history = [];
+    uploadPanel.style.display = 'none';
+    addMsg('Loaded. Ask a question about "' + label + '".' + (truncated ? ' (truncated to fit demo)' : ''), 'system');
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.placeholder = 'Ask about the source…';
+    input.focus();
+    updateMeta();
+  }
+
+  // Source tabs — upload document vs. paste a URL
+  const tabFile = document.getElementById('chatbot-tab-file');
+  const tabUrl = document.getElementById('chatbot-tab-url');
+  const paneFile = document.getElementById('chatbot-source-file');
+  const paneUrl = document.getElementById('chatbot-source-url');
+  const urlInput = document.getElementById('chatbot-url-input');
+  const urlBtn = document.getElementById('chatbot-url-btn');
+  const urlStatus = document.getElementById('chatbot-url-status');
+
+  tabFile.addEventListener('click', () => {
+    tabFile.classList.add('active');
+    tabUrl.classList.remove('active');
+    paneFile.style.display = 'flex';
+    paneUrl.style.display = 'none';
+  });
+  tabUrl.addEventListener('click', () => {
+    tabUrl.classList.add('active');
+    tabFile.classList.remove('active');
+    paneUrl.style.display = 'flex';
+    paneFile.style.display = 'none';
+  });
+
+  async function fetchUrl() {
+    const url = urlInput.value.trim();
+    if (!url) return;
+
+    let hostLabel = url;
+    try { hostLabel = new URL(/^https?:\/\//i.test(url) ? url : 'https://' + url).hostname; } catch (e) {}
+
+    urlBtn.disabled = true;
+    urlInput.disabled = true;
+    urlStatus.textContent = 'Reading ' + hostLabel + '… (crawling a few linked pages, up to ~10s)';
+
+    try {
+      const res = await fetch('/api/extract-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        urlStatus.textContent = '';
+        urlBtn.disabled = false;
+        urlInput.disabled = false;
+        addMsg(data.error || 'Could not fetch that page.', 'system');
+        return;
+      }
+      urlStatus.textContent = '✓ ' + data.title + (data.truncated ? ' (truncated to fit demo)' : '');
+      const label = (data.pages && data.pages.length > 1)
+        ? data.title + ' — ' + data.pages.map(p => p.title).join(', ')
+        : data.title;
+      sourceLoaded(data.text, label, data.truncated);
+    } catch (e) {
+      urlStatus.textContent = '';
+      urlBtn.disabled = false;
+      urlInput.disabled = false;
+      addMsg('Network error. Try again.', 'system');
+    }
+  }
+
+  urlBtn.addEventListener('click', fetchUrl);
+  urlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') fetchUrl(); });
 
   launcher.addEventListener('click', () => {
     panel.classList.add('open');
@@ -1771,17 +1892,8 @@ document.getElementById('booking-form').addEventListener('submit', async functio
           addMsg(data.error || 'Could not read that file.', 'system');
           return;
         }
-        documentText = data.text;
-        sessionStart = Date.now();
-        history = [];
         fileName.textContent = '✓ ' + file.name + (data.truncated ? ' (truncated to fit demo)' : '');
-        document.getElementById('chatbot-upload').style.display = 'none';
-        addMsg('Document loaded. Ask a question about "' + file.name + '".', 'system');
-        input.disabled = false;
-        sendBtn.disabled = false;
-        input.placeholder = 'Ask about the document…';
-        input.focus();
-        updateMeta();
+        sourceLoaded(data.text, file.name, data.truncated);
       } catch (e) {
         fileName.textContent = '';
         fileBtn.disabled = false;
