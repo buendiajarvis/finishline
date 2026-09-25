@@ -1,0 +1,155 @@
+import { adaptVercelHandler } from '../_lib/adapt.js';
+
+const MAX_TURNS = 10; // user messages per demo session
+const MAX_SESSION_MS = 5 * 60 * 1000; // 5 minute demo window
+const MAX_MESSAGE_CHARS = 2000;
+const MAX_DOCUMENT_CHARS = 85000; // extract-doc caps at 40k, extract-url's multi-page crawl at 80k; a little slack, hard ceiling regardless of caller
+// Calls the Anthropic Messages API directly with ANTHROPIC_API_KEY. This used
+// to route through Vercel AI Gateway for its negotiated zero-data-retention
+// agreement, but the gateway account is on the free tier and rejects this model
+// with 403 RestrictedModelsError. Direct calls fall under Anthropic's standard
+// API retention (up to 30 days for trust & safety), not ZDR.
+const MODEL = 'claude-haiku-4-5';
+
+async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  let raw = '';
+  await new Promise((resolve, reject) => {
+    req.on('data', chunk => { raw += chunk.toString(); });
+    req.on('end', resolve);
+    req.on('error', reject);
+  });
+
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch (e) {
+    return res.status(400).json({ error: 'Invalid JSON' });
+  }
+
+  // Restrict to same-site calls — this endpoint is not a public API.
+  const origin = req.headers.origin || req.headers.referer || '';
+  if (!/^https:\/\/([a-z0-9-]+\.)*finishlinemsp\.com(\/|$)/i.test(origin)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  const { document, history, message, sessionStart, email } = data;
+
+  if (!document || typeof document !== 'string') {
+    return res.status(400).json({ error: 'Upload a document first.' });
+  }
+  if (document.length > MAX_DOCUMENT_CHARS) {
+    return res.status(400).json({ error: 'Document too large.' });
+  }
+  if (!message || typeof message !== 'string') {
+    return res.status(400).json({ error: 'message is required' });
+  }
+  if (message.length > MAX_MESSAGE_CHARS) {
+    return res.status(400).json({ error: 'Message too long for the demo.' });
+  }
+
+  const turns = Array.isArray(history) ? history : [];
+  if (turns.length > MAX_TURNS * 2) {
+    return res.status(400).json({ error: 'Conversation too long. Refresh to start a new session.' });
+  }
+  const userTurns = turns.filter(m => m.role === 'user').length + 1;
+  if (userTurns > MAX_TURNS) {
+    return res.status(429).json({ error: 'Demo limit reached (10 messages). Refresh to start a new session.' });
+  }
+  if (sessionStart && Date.now() - Number(sessionStart) > MAX_SESSION_MS) {
+    return res.status(429).json({ error: 'Demo session expired (5 minute limit). Refresh to start a new session.' });
+  }
+
+  // Lead notification — fire once per session, on the first message only.
+  // Only the gated business email is sent, never chat/document content.
+  // Awaited (not fire-and-forget) since a serverless function can be frozen
+  // the instant the response is sent, killing any unawaited work.
+  if (userTurns === 1 && email && process.env.RESEND_API_KEY) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'FinishLine MSP <register@aiworx4me.com>',
+          to: ['phil@finishlinemsp.com'],
+          subject: 'New chatbot demo lead',
+          text: `Business email: ${email}\n\nStarted the homepage AI support demo just now.\n\n---\nfinishlinemsp.com`
+        })
+      });
+    } catch (e) {
+      console.error('Lead notification error:', e?.message || 'unknown');
+      // never block the chat on this
+    }
+  }
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.error('No Anthropic credential available');
+    return res.status(500).json({ error: 'Server misconfigured' });
+  }
+
+  const systemPrompt = `You are a demo support assistant for FinishLine MSP, showing how document-scoped Q&A works. You must answer ONLY using information contained in the document below. Never use outside knowledge, even if you know the answer.
+
+If the user asks something the document doesn't cover, say plainly that the uploaded document doesn't contain that information — don't guess or fill gaps.
+
+Keep answers brief (a few sentences). This is a live demo other visitors will also use.
+
+--- DOCUMENT START ---
+${document}
+--- DOCUMENT END ---`;
+
+  const messages = [
+    ...turns
+      .filter(m => m.role === 'user' || m.role === 'assistant')
+      .map(m => ({ role: m.role, content: String(m.content).slice(0, MAX_MESSAGE_CHARS) })),
+    { role: 'user', content: message }
+  ];
+
+  try {
+    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 400,
+        system: systemPrompt,
+        messages
+      })
+    });
+
+    if (!aiRes.ok) {
+      // Log the error type only, never the message or the body — on some error
+      // types (e.g. content policy) Anthropic echoes the offending user text
+      // back, and that would leak into log retention.
+      let errorType = 'unknown';
+      try {
+        const body = await aiRes.json();
+        if (typeof body?.error?.type === 'string') errorType = body.error.type;
+      } catch (e) {
+        // non-JSON error body; status alone is what we have
+      }
+      console.error('Anthropic API error, status:', aiRes.status, 'type:', errorType);
+      return res.status(502).json({ error: 'Assistant is unavailable right now. Try again shortly.' });
+    }
+
+    const result = await aiRes.json();
+    const reply = result.content?.[0]?.text || '';
+    return res.status(200).json({ reply, turnsUsed: userTurns, turnsMax: MAX_TURNS });
+  } catch (error) {
+    // Log only the error type/message, never request/response payloads.
+    console.error('Chatbot call error:', error?.message || 'unknown');
+    return res.status(500).json({ error: 'Something went wrong. Try again.' });
+  }
+}
+
+export const onRequestPost = adaptVercelHandler(handler);

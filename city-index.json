@@ -1,0 +1,88 @@
+{
+  "cities": [
+    {
+      "name": "Newport Beach",
+      "slug": "newport-beach",
+      "zip": "92660",
+      "url": "https://finishlinemsp.com/locations/newport-beach"
+    },
+    {
+      "name": "Manhattan Beach",
+      "slug": "manhattan-beach",
+      "zip": "90266",
+      "url": "https://finishlinemsp.com/locations/manhattan-beach"
+    },
+    {
+      "name": "El Segundo",
+      "slug": "el-segundo",
+      "zip": "90245",
+      "url": "https://finishlinemsp.com/locations/el-segundo"
+    },
+    {
+      "name": "Playa del Rey",
+      "slug": "playa-del-rey",
+      "zip": "90094",
+      "url": "https://finishlinemsp.com/locations/playa-del-rey"
+    },
+    {
+      "name": "Huntington Beach",
+      "slug": "huntington-beach",
+      "zip": "92648",
+      "url": "https://finishlinemsp.com/locations/huntington-beach"
+    },
+    {
+      "name": "Redondo Beach",
+      "slug": "redondo-beach",
+      "zip": "90277",
+      "url": "https://finishlinemsp.com/locations/redondo-beach"
+    },
+    {
+      "name": "Hermosa Beach",
+      "slug": "hermosa-beach",
+      "zip": "90254",
+      "url": "https://finishlinemsp.com/locations/hermosa-beach"
+    },
+    {
+      "name": "Santa Monica",
+      "slug": "santa-monica",
+      "zip": "90401",
+      "url": "https://finishlinemsp.com/locations/santa-monica"
+    },
+    {
+      "name": "Rancho Palos Verdes",
+      "slug": "rancho-palos-verdes",
+      "zip": "90275",
+      "url": "https://finishlinemsp.com/locations/rancho-palos-verdes"
+    },
+    {
+      "name": "Palos Verdes Estates",
+      "slug": "palos-verdes-estates",
+      "zip": "90274",
+      "url": "https://finishlinemsp.com/locations/palos-verdes-estates"
+    },
+    {
+      "name": "Seal Beach",
+      "slug": "seal-beach",
+      "zip": "90740",
+      "url": "https://finishlinemsp.com/locations/seal-beach"
+    },
+    {
+      "name": "Venice",
+      "slug": "venice",
+      "zip": "90291",
+      "url": "https://finishlinemsp.com/locations/venice"
+    },
+    {
+      "name": "Marina del Rey",
+      "slug": "marina-del-rey",
+      "zip": "90292",
+      "url": "https://finishlinemsp.com/locations/marina-del-rey"
+    },
+    {
+      "name": "Costa Mesa",
+      "slug": "costa-mesa",
+      "zip": "92626",
+      "url": "https://finishlinemsp.com/locations/costa-mesa"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+BUILD.md
+prospects.csv
+send-list.md
+data/*.jsonl
+content/outbound/
+scripts/

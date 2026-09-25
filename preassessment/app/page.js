@@ -21,8 +21,12 @@ export default function Home() {
   }
 
   async function goNext() {
-    // If we haven't fetched dynamic follow-ups for this section yet, do that first
-    if (dynamicQuestions.length === 0) {
+    const isLastSection = sectionIndex === SECTIONS.length - 1;
+
+    // If we haven't fetched dynamic follow-ups for this section yet, do that first —
+    // except on the last section, where every question must be visible before
+    // "Generate My Assessment" so no new question can appear after it.
+    if (!isLastSection && dynamicQuestions.length === 0) {
       setLoadingFollowUps(true);
       try {
         const res = await fetch('/api/next-question', {

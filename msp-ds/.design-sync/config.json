@@ -1,0 +1,67 @@
+{
+  "projectId": "5204f706-a284-48f4-9849-3ac1aeb07fcc",
+  "pkg": "finishline-msp-ds",
+  "globalName": "FinishLineMSP",
+  "shape": "package",
+  "buildCmd": "npm run build",
+  "srcDir": "src",
+  "tsconfig": "tsconfig.json",
+  "cssEntry": "src/styles.css",
+  "extraFonts": [
+    "fonts/fonts.css"
+  ],
+  "docsDir": "docs",
+  "guidelinesGlob": [
+    "guides/**/*.md"
+  ],
+  "provider": {
+    "component": "AppShell",
+    "props": {
+      "style": {
+        "padding": "24px"
+      }
+    }
+  },
+  "overrides": {
+    "CapabilityCard": {
+      "cardMode": "column"
+    },
+    "IntelCard": {
+      "cardMode": "column"
+    },
+    "MetricBars": {
+      "cardMode": "column"
+    },
+    "AppShell": {
+      "cardMode": "column"
+    },
+    "Container": {
+      "cardMode": "column"
+    },
+    "Grid12": {
+      "cardMode": "column"
+    },
+    "SiteFooter": {
+      "cardMode": "column"
+    },
+    "SiteNav": {
+      "cardMode": "column"
+    },
+    "ApproachTimeline": {
+      "cardMode": "column"
+    },
+    "CapabilityGrid": {
+      "cardMode": "column"
+    },
+    "ContactLayout": {
+      "cardMode": "column"
+    },
+    "CtaSection": {
+      "cardMode": "column"
+    },
+    "IntelFeed": {
+      "cardMode": "column"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

@@ -213,6 +213,42 @@ body {
   max-width: 560px;
 }
 
+.demo-hero {
+  max-width: 960px;
+  margin: 0 auto var(--space-16);
+  position: relative;
+  border: 1px solid var(--outline-variant);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), var(--glow-cyan-strong);
+  background: var(--surface-container-lowest);
+  overflow: hidden;
+}
+
+.demo-hero video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.demo-hero-label {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-4);
+  z-index: 2;
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--surface-tint);
+  background: rgba(7, 13, 31, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: var(--space-1) var(--space-3);
+  pointer-events: none;
+}
+
 .demo-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -576,6 +612,11 @@ body {
         plainly when the answer isn't in there. That's the whole pitch: zero errors
         outside its brief, zero headcount to manage.
       </p>
+    </div>
+
+    <div class="demo-hero">
+      <span class="demo-hero-label">◈ Watch it work</span>
+      <video src="/demo/hero.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
     </div>
 
     <div class="demo-grid">

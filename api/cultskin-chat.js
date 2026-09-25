@@ -1,7 +1,12 @@
 const MAX_TURNS = 10; // messages per session
 const MAX_SESSION_MS = 10 * 60 * 1000; // 10 minute session window
 const MAX_MESSAGE_CHARS = 2000;
-const MODEL = 'anthropic/claude-haiku-4-5';
+// Calls the Anthropic Messages API directly with ANTHROPIC_API_KEY. This used
+// to route through Vercel AI Gateway for its negotiated zero-data-retention
+// agreement, but the gateway account is on the free tier and rejects this model
+// with 403 RestrictedModelsError. Direct calls fall under Anthropic's standard
+// API retention (up to 30 days for trust & safety), not ZDR.
+const MODEL = 'claude-haiku-4-5';
 
 // CULT/SKIN's own knowledge base — the assistant answers strictly from this.
 const DOCUMENT = `CULT/SKIN — Brand & Product Knowledge Base
@@ -108,9 +113,9 @@ module.exports = async (req, res) => {
     return res.status(429).json({ error: 'Session expired. Refresh to start a new chat.' });
   }
 
-  const gatewayKey = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
-  if (!gatewayKey) {
-    console.error('No AI Gateway credential available');
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.error('No Anthropic credential available');
     return res.status(500).json({ error: 'Server misconfigured' });
   }
 
@@ -132,10 +137,10 @@ ${DOCUMENT}
   ];
 
   try {
-    const aiRes = await fetch('https://ai-gateway.vercel.sh/v1/messages', {
+    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': gatewayKey,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
         'Content-Type': 'application/json'
       },
@@ -143,15 +148,21 @@ ${DOCUMENT}
         model: MODEL,
         max_tokens: 400,
         system: systemPrompt,
-        messages,
-        providerOptions: {
-          gateway: { zeroDataRetention: true }
-        }
+        messages
       })
     });
 
     if (!aiRes.ok) {
-      console.error('AI Gateway error, status:', aiRes.status);
+      // Log the error type only, never the message or the body — Anthropic can
+      // echo the offending user text back on some error types.
+      let errorType = 'unknown';
+      try {
+        const body = await aiRes.json();
+        if (typeof body?.error?.type === 'string') errorType = body.error.type;
+      } catch (e) {
+        // non-JSON error body; status alone is what we have
+      }
+      console.error('Anthropic API error, status:', aiRes.status, 'type:', errorType);
       return res.status(502).json({ error: 'Chat is unavailable right now. Try again shortly.' });
     }
 

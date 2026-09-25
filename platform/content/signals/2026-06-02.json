@@ -1,0 +1,61 @@
+{
+  "date": "2026-06-02",
+  "title": "AI Signals | June 2, 2026",
+  "headline": "AI is changing faster than your operating plan. Let's close the gap.",
+  "dek": "Most executives are reading these headlines and wondering whether to act, wait, or ignore them. The ones who call FinishLine don't have to decide alone.",
+  "reviewedAt": "08:47 PT",
+  "sources": ["The Verge", "Microsoft Build", "Google I/O"],
+  "readingTime": "4 min",
+  "stories": [
+    {
+      "tag": "Regulation",
+      "source": "The Verge — Policy",
+      "title": "Trump signs executive order to review AI models before release",
+      "excerpt": "The White House created a voluntary framework requiring AI companies to share frontier models with federal agencies before public release. The goal: assess advanced cyber capabilities and protect critical infrastructure.",
+      "url": "https://www.theverge.com/policy/941775/trump-ai-executive-order",
+      "why": "Compliance review is now a pre-release gate. If your vendor is subject to this framework, expect disclosure requirements and potential model-access restrictions. The fix is a regulation-agnostic AI procurement and governance playbook — built before the next wave of rules lands, not after.",
+      "size": "primary"
+    },
+    {
+      "tag": "Models",
+      "source": "The Verge — Microsoft Build",
+      "title": "Microsoft's MAI-Thinking-1 is their first in-house reasoning model",
+      "excerpt": "Trained from scratch without third-party distillation. Microsoft positions it against frontier reasoning models for software engineering and complex problem-solving.",
+      "url": "https://www.theverge.com/tech/941664/microsoft-ai-model-reasoning-mai-thinking-1-build-2026",
+      "why": "Major players are vertically integrating, which shifts the decision from vendor selection to model strategy. Align AI spend with business outcomes before the next contract cycle locks you into the wrong stack.",
+      "size": "secondary"
+    },
+    {
+      "tag": "Agents",
+      "source": "The Verge — Microsoft Build",
+      "title": "Microsoft Scout is an always-on personal assistant for Microsoft 365",
+      "excerpt": "Unlike Copilot, Scout operates across Outlook, OneDrive, and Teams. It can assign virtual assistants to employees for calendar management, expense reporting, and email drafting.",
+      "url": "https://www.theverge.com/news/939713/microsoft-scout-assistant-openclaw",
+      "why": "Agent interfaces are becoming ambient. AI adoption will be measured by workflow coverage, not feature count — so the win is a multi-agent architecture that delivers measurable productivity in weeks, not quarters."
+    },
+    {
+      "tag": "Security",
+      "source": "The Verge — Google",
+      "title": "Google Phone app detects AI voice impersonation scams",
+      "excerpt": "When a scammer spoofs a contact's number with AI-generated voice, Phone by Google flags the call as suspicious in real time.",
+      "url": "https://www.theverge.com/tech/941517/google-phone-scammer-ai-impersonation",
+      "why": "Defense-grade AI detection is moving to consumer hardware. Enterprise comms will need similar capabilities within 12 months — bake threat detection into your AI roadmap now rather than bolting it on after an incident."
+    },
+    {
+      "tag": "Hardware",
+      "source": "The Verge — Microsoft Build",
+      "title": "Microsoft Project Solara is an Android-based OS for AI agent gadgets",
+      "excerpt": "Built for desk and badge form factors. Unlocks with facial recognition and fingerprint, hosts local AI agents that persist across sessions.",
+      "url": "https://www.theverge.com/news/941830/microsoft-project-solara-os-ai-agent-gadgets",
+      "why": "Physical AI hardware is splitting from general-purpose computing. Procurement roadmaps should account for embedded agent endpoints now, with a hardware-agnostic strategy that won't be obsolete in 18 months."
+    },
+    {
+      "tag": "Infrastructure",
+      "source": "The Verge — Microsoft Build",
+      "title": "Surface RTX Spark Dev Box targets local AI workloads",
+      "excerpt": "A miniature developer PC powered by Nvidia Arm-based RTX Spark chips. Optimized for sustained local inference and fine-tuning.",
+      "url": "https://www.theverge.com/news/941271/microsoft-surface-rtx-spark-dev-box-specs-availability",
+      "why": "Local inference boxes are becoming a standard dev tool, not a niche. Match your infrastructure budget to actual training and inference requirements — not vendor benchmarks."
+    }
+  ]
+}

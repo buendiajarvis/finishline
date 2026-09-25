@@ -1,0 +1,36 @@
+{
+  "name": "finishline-msp-ds",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FinishLine MSP \"Mission Control\" design system — the components, tokens, and type shipping on finishlinemsp.com.",
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./src/styles.css",
+    "./fonts.css": "./fonts/fonts.css"
+  },
+  "files": ["dist", "src/styles.css", "fonts"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.7.0"
+  }
+}

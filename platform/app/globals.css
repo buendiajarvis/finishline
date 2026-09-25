@@ -1,0 +1,329 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@font-face { font-family: "FinishLine Sans"; src: url('/fonts/geist-latin.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "FinishLine Mono"; src: url('/fonts/geist-mono-latin.woff2') format('woff2'); font-weight: 400 700; font-display: swap; }
+
+/* ----------------------------------------------------------------------------
+   FinishLine brand tokens — "Mission Control"
+   Dark navy base + electric-cyan accent. Material-3 dynamic-color naming,
+   ported verbatim from the marketing site (index.html / ai-signals page).
+   Hanken Grotesk for prose, JetBrains Mono for every micro-label.
+   ---------------------------------------------------------------------------- */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--ff-display);
+  --font-mono: var(--ff-mono);
+  --font-heading: var(--ff-display);
+
+  /* shadcn semantic tokens */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Brand raw tokens exposed as utilities (bg-cyan, text-surface, etc.) */
+  --color-surface: var(--surface);
+  --color-surface-container: var(--surface-container);
+  --color-on-surface: var(--on-surface);
+  --color-cyan: var(--primary-container);
+  --color-steel: var(--secondary);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  /* ── FinishLine raw palette (Material-3 dark, from the marketing site) ── */
+  --surface: #0c1324;
+  --surface-dim: #0c1324;
+  --surface-bright: #33394c;
+  --surface-container-lowest: #070d1f;
+  --surface-container-low: #151b2d;
+  --surface-container: #191f31;
+  --surface-container-high: #23293c;
+  --surface-container-highest: #2e3447;
+
+  --on-surface: #dce1fb;
+  --on-surface-variant: #b9cacb;
+
+  --outline: #849495;
+  --outline-variant: #3b494b;
+
+  --surface-tint: #00dbe9;
+  --primary-bright: #dbfcff;
+  --on-primary: #00363a;
+  --primary-container: #00f0ff;
+  --on-primary-container: #006970;
+  --primary-fixed: #7df4ff;
+
+  --secondary: #b7c8e1;
+  --on-secondary: #213145;
+  --secondary-container: #3a4a5f;
+
+  --tertiary: #f5f5ff;
+
+  /* Typography */
+  --ff-display: "FinishLine Sans", system-ui, sans-serif;
+  --ff-mono: "FinishLine Mono", ui-monospace, monospace;
+
+  --fs-display-lg: 48px;
+  --fs-display-lg-mobile: 32px;
+  --fs-headline-md: 24px;
+  --fs-body-md: 16px;
+  --fs-mono-label: 12px;
+  --fs-mono-data: 14px;
+
+  /* Spacing — 4px base */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px; --space-16: 64px; --space-20: 80px; --space-24: 96px;
+  --gutter: 24px;
+  --margin-desktop: 64px;
+  --margin-mobile: 20px;
+  --container-max: 1200px;
+
+  /* Glow */
+  --glow-cyan: 0 0 15px rgba(0, 219, 233, 0.08);
+  --glow-cyan-strong: 0 0 30px rgba(0, 219, 233, 0.15);
+  --glow-cyan-text: 0 0 8px rgba(0, 240, 255, 0.3);
+
+  /* ── shadcn semantic mapping (dark-by-default; the brand IS dark) ── */
+  --background: var(--surface);
+  --foreground: var(--on-surface);
+
+  --card: var(--surface-container-low);
+  --card-foreground: var(--on-surface);
+
+  --popover: var(--surface-container);
+  --popover-foreground: var(--on-surface);
+
+  --primary: var(--primary-container);
+  --primary-foreground: var(--on-primary);
+
+  --secondary: var(--secondary-container);
+  --secondary-foreground: var(--on-surface);
+
+  --muted: var(--surface-container);
+  --muted-foreground: var(--on-surface-variant);
+
+  --accent: var(--surface-container-high);
+  --accent-foreground: var(--on-surface);
+
+  --destructive: #ffb4ab;
+
+  --border: var(--outline-variant);
+  --input: var(--surface-container-high);
+  --ring: var(--primary-container);
+
+  --chart-1: var(--primary-container);
+  --chart-2: var(--secondary);
+  --chart-3: var(--primary-fixed);
+  --chart-4: var(--outline);
+  --chart-5: #7df4ff;
+
+  --radius: 0.25rem;
+
+  --sidebar: var(--surface-container-lowest);
+  --sidebar-foreground: var(--on-surface);
+  --sidebar-primary: var(--primary-container);
+  --sidebar-primary-foreground: var(--on-primary);
+  --sidebar-accent: var(--surface-container);
+  --sidebar-accent-foreground: var(--on-surface);
+  --sidebar-border: var(--outline-variant);
+  --sidebar-ring: var(--primary-container);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply antialiased;
+    scroll-behavior: smooth;
+    font-family: var(--ff-display);
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: var(--fs-body-md);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    @apply tracking-tight;
+    font-weight: 600;
+    color: var(--on-surface);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   FinishLine UI kit — bespoke classes for the "mission-control" aesthetic
+   used by the public Signals briefing pages.
+   ---------------------------------------------------------------------------- */
+@layer utilities {
+  .fl-container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--margin-desktop); }
+  .mono { font-family: var(--ff-mono); }
+  .text-balance { text-wrap: balance; }
+
+  /* Eyebrow / section label — uppercase mono with cyan tint */
+  .eyebrow {
+    font-family: var(--ff-mono);
+    font-size: var(--fs-mono-label);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--surface-tint);
+  }
+
+  /* Sharp card with cyan corner pips + hover glow */
+  .fl-card {
+    position: relative;
+    background: var(--surface-container-low);
+    border: 1px solid var(--outline-variant);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .fl-card::before,
+  .fl-card::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+    border-color: var(--primary-container);
+    opacity: 0.55;
+    transition: opacity 0.25s ease;
+  }
+  .fl-card::before { top: -1px; left: -1px; border-top: 2px solid; border-left: 2px solid; }
+  .fl-card::after { bottom: -1px; right: -1px; border-bottom: 2px solid; border-right: 2px solid; }
+  .fl-card:hover { border-color: color-mix(in oklch, var(--primary-container) 45%, var(--outline-variant)); box-shadow: var(--glow-cyan); }
+  .fl-card:hover::before, .fl-card:hover::after { opacity: 1; }
+
+  /* 12-column story grid */
+  .fl-grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gutter); }
+  .span-8 { grid-column: span 8; }
+  .span-6 { grid-column: span 6; }
+  .span-4 { grid-column: span 4; }
+
+  /* "Why this matters" footer block on a story card */
+  .story-why {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--on-surface-variant);
+    border-top: 1px solid var(--outline-variant);
+    padding-top: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .story-why b {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--primary-container);
+    margin-bottom: 6px;
+  }
+
+  /* Live status dot */
+  .pulse-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 999px;
+    background: var(--primary-container);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+    animation: fl-pulse 2s ease-in-out infinite;
+  }
+  @keyframes fl-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .glow-text { text-shadow: var(--glow-cyan-text); }
+
+  .hero-panel { position: relative; min-height: min(760px, calc(100dvh - 56px)); overflow: hidden; border-bottom: 1px solid var(--outline-variant); }
+  .hero-image { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(12,19,36,.98) 0%, rgba(12,19,36,.90) 38%, rgba(12,19,36,.24) 72%, rgba(12,19,36,.72) 100%), url('/images/finishline-office-hero.png') center right / cover no-repeat; }
+  .hero-content { position: relative; display: flex; min-height: min(760px, calc(100dvh - 56px)); align-items: center; padding-top: 4rem; padding-bottom: 5rem; }
+  .hero-copy { max-width: 720px; }
+  .hero-copy h1, .offer-hero h1 { font-size: clamp(42px, 6vw, 72px); line-height: 1.02; letter-spacing: -.045em; }
+  .cta-button { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; border-radius: 2px; padding: 11px 20px; color: var(--on-primary); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease; }
+  .cta-button:hover { opacity: .9; box-shadow: var(--glow-cyan-strong); transform: translateY(-1px); }
+  .cta-button:active { transform: translateY(1px) scale(.98); }
+  .secondary-link { color: var(--on-surface-variant); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; transition: color .2s ease; }
+  .secondary-link:hover { color: var(--on-surface); }
+  .offer-grid { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 1px; background: var(--outline-variant); border: 1px solid var(--outline-variant); }
+  .offer-card { min-height: 330px; padding: 24px; background: var(--surface-container-low); text-decoration: none; transition: background .25s ease, transform .25s ease; }
+  .offer-card:hover { background: var(--surface-container); transform: translateY(-4px); }
+  .offer-cyan { background: linear-gradient(145deg, rgba(0,240,255,.10), var(--surface-container-low) 48%); }
+  .offer-steel { background: linear-gradient(145deg, rgba(183,200,225,.10), var(--surface-container-low) 48%); }
+  .offer-line { background: linear-gradient(145deg, rgba(59,73,75,.22), var(--surface-container-low) 48%); }
+  .proof-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; border-block: 1px solid var(--outline-variant); background: var(--outline-variant); }
+  .proof-strip div { display: grid; gap: 5px; padding: 20px; background: var(--surface-container-low); }
+  .proof-strip strong { font-size: 19px; font-weight: 600; color: var(--on-surface); }
+  .proof-strip span { font-family: var(--ff-mono); font-size: 10px; line-height: 1.5; text-transform: uppercase; letter-spacing: .07em; color: var(--on-surface-variant); }
+  .callout-panel { display: flex; align-items: end; justify-content: space-between; gap: 32px; padding: 40px; border: 1px solid var(--outline-variant); background: radial-gradient(circle at 88% 30%, rgba(0,240,255,.12), transparent 32%), var(--surface-container-low); }
+  .offer-hero { border-bottom: 1px solid var(--outline-variant); }
+  .offer-detail { padding-top: 72px; }
+  .offer-statement { border-left: 2px solid var(--primary-container); padding-left: 24px; }
+  .offer-columns { display: grid; grid-template-columns: 1.1fr .9fr; gap: 80px; }
+  .offer-aside { display: grid; align-content: start; gap: 32px; border-top: 1px solid var(--outline-variant); padding-top: 20px; }
+
+  @media (max-width: 1024px) {
+    .fl-container { padding: 0 var(--margin-mobile); }
+    .span-8, .span-6, .span-4 { grid-column: span 12; }
+    .offer-grid { grid-template-columns: 1fr; }
+    .offer-card { min-height: auto; }
+    .offer-columns { grid-template-columns: 1fr; gap: 48px; }
+    .proof-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .hero-panel, .hero-content { min-height: 680px; }
+    .hero-image { background: linear-gradient(90deg, rgba(12,19,36,.98) 0%, rgba(12,19,36,.84) 100%), url('/images/finishline-office-hero.png') 64% center / cover no-repeat; }
+    .hero-content { align-items: end; padding-top: 5rem; padding-bottom: 3rem; }
+    .hero-copy h1, .offer-hero h1 { font-size: clamp(40px, 12vw, 58px); }
+    .proof-strip { grid-template-columns: 1fr; }
+    .callout-panel { align-items: start; flex-direction: column; padding: 28px; }
+    .offer-detail { padding-top: 48px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-dot { animation: none; }
+  }
+}
+
+/* Markdown prose (outbound previews, content bodies) */
+.fl-prose { color: var(--on-surface-variant); font-size: 15px; line-height: 1.7; }
+.fl-prose > *:first-child { margin-top: 0; }
+.fl-prose h1, .fl-prose h2, .fl-prose h3 { color: var(--on-surface); font-weight: 600; margin: 1.75rem 0 0.75rem; letter-spacing: -0.01em; }
+.fl-prose h1 { font-size: 26px; } .fl-prose h2 { font-size: 20px; } .fl-prose h3 { font-size: 16px; }
+.fl-prose p { margin: 0.85rem 0; }
+.fl-prose ul, .fl-prose ol { margin: 0.85rem 0 0.85rem 1.25rem; }
+.fl-prose ul { list-style: disc; } .fl-prose ol { list-style: decimal; }
+.fl-prose li { margin: 0.3rem 0; }
+.fl-prose strong { color: var(--on-surface); font-weight: 600; }
+.fl-prose code { font-family: var(--ff-mono); font-size: 12.5px; background: var(--surface-container); padding: 0.1rem 0.35rem; border-radius: 4px; }
+.fl-prose a { color: var(--primary-container); text-decoration: underline; text-underline-offset: 3px; }

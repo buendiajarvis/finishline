@@ -1,0 +1,417 @@
+<title>Preassessment Design Coherence — Spec</title>
+<style>
+@font-face {
+  font-family: 'Hanken Grotesk';
+  src: local('Hanken Grotesk');
+}
+:root {
+  --surface: #0c1324;
+  --surface-container-lowest: #070d1f;
+  --surface-container-low: #151b2d;
+  --surface-container: #191f31;
+  --surface-container-high: #23293c;
+  --on-surface: #dce1fb;
+  --on-surface-dim: #9aa4c4;
+  --outline: #38485d;
+  --outline-variant: #23293c;
+  --primary: #00dbe9;
+  --primary-strong: #00f0ff;
+  --on-primary: #002022;
+
+  --bg: var(--surface);
+  --bg-raised: var(--surface-container-low);
+  --bg-card: var(--surface-container);
+  --fg: var(--on-surface);
+  --fg-dim: var(--on-surface-dim);
+  --line: var(--outline-variant);
+  --accent: var(--primary);
+  --accent-strong: var(--primary-strong);
+
+  --ff-display: 'Hanken Grotesk', system-ui, sans-serif;
+  --ff-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --glow: 0 0 20px rgba(0, 219, 233, 0.12);
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f6fb;
+  --bg-raised: #ffffff;
+  --bg-card: #ffffff;
+  --fg: #131b2e;
+  --fg-dim: #565f7c;
+  --line: #d7dcec;
+  --accent: #006970;
+  --accent-strong: #00838c;
+  --glow: 0 0 0 rgba(0,0,0,0);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f6fb;
+    --bg-raised: #ffffff;
+    --bg-card: #ffffff;
+    --fg: #131b2e;
+    --fg-dim: #565f7c;
+    --line: #d7dcec;
+    --accent: #006970;
+    --accent-strong: #00838c;
+    --glow: 0 0 0 rgba(0,0,0,0);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--ff-display);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding: 64px 24px 120px;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-strong);
+  box-shadow: var(--glow);
+  flex-shrink: 0;
+}
+
+h1 {
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  color: var(--fg-dim);
+  font-size: 16px;
+  margin: 0 0 32px;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.meta-item {
+  background: var(--bg-raised);
+  padding: 14px 16px;
+}
+
+.meta-label {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 4px;
+}
+
+.meta-value {
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  color: var(--fg);
+}
+
+.pill {
+  display: inline-block;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-strong);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 13px;
+  font-family: var(--ff-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 24px 0 8px;
+  color: var(--fg);
+}
+
+section > h2 + p,
+section > p {
+  margin: 0 0 12px;
+}
+
+p, li {
+  color: var(--fg);
+  font-size: 15px;
+}
+
+p code, li code {
+  font-family: var(--ff-mono);
+  font-size: 0.85em;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: var(--accent-strong);
+}
+
+ul, ol {
+  padding-left: 22px;
+  margin: 0 0 16px;
+}
+
+li { margin-bottom: 8px; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.problem-card { border-left: 3px solid var(--accent-strong); }
+
+.approach-note {
+  font-style: italic;
+  color: var(--fg-dim);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.sequence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.seq-step {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+.seq-step.current {
+  border-color: var(--accent-strong);
+  color: var(--accent-strong);
+  box-shadow: var(--glow);
+}
+
+.seq-arrow { color: var(--line); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table-wrap { overflow-x: auto; }
+
+th, td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  font-weight: 500;
+}
+
+td.mono, th.mono { font-family: var(--ff-mono); }
+
+.status-approved {
+  color: var(--accent-strong);
+  font-family: var(--ff-mono);
+  font-size: 12px;
+}
+
+.status-approved::before { content: '✓ '; }
+
+footer.doc-footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--fg-dim);
+  font-family: var(--ff-mono);
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wrap { animation: fadein 0.4s ease-out; }
+}
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">Design Spec · Sub-project 1 of 6</div>
+<h1>Preassessment Design Coherence</h1>
+<p class="subtitle">Porting finishlinemsp.com's visual system into the preassessment Next.js app.</p>
+
+<div class="meta">
+  <div class="meta-item">
+    <div class="meta-label">Date</div>
+    <div class="meta-value">2026-07-12</div>
+  </div>
+  <div class="meta-item">
+    <div class="meta-label">Status</div>
+    <div class="meta-value"><span class="status-approved">Approved</span></div>
+  </div>
+  <div class="meta-item">
+    <div class="meta-label">Scope</div>
+    <div class="meta-value">Styling only</div>
+  </div>
+  <div class="meta-item">
+    <div class="meta-label">Target</div>
+    <div class="meta-value">preassessment.finishlinemsp.com</div>
+  </div>
+</div>
+
+<section>
+  <h2>Build sequence</h2>
+  <div class="sequence">
+    <span class="seq-step current">1 · Design coherence</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step">2 · Validation</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step">3 · DB persistence</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step">4 · Email</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step">5 · Calendar</span>
+    <span class="seq-arrow">→</span>
+    <span class="seq-step">6 · Analytics</span>
+  </div>
+  <p class="approach-note">Each later step depends on the DB record this sequence eventually produces — persistence before email/calendar/analytics, not after.</p>
+</section>
+
+<section>
+  <h2>Problem</h2>
+  <div class="card problem-card">
+    <p><code>preassessment/</code> (deployed at <code>preassessment.finishlinemsp.com</code>) is a Next.js app with intentionally minimal/unstyled UI — default Tailwind base, no custom theme. It needs to look like the same product as <code>finishlinemsp.com</code> (dark navy/cyan tech theme, defined inline in <code>index.html</code>), not a separate prototype.</p>
+    <p style="margin-bottom:0">This is styling-only. No changes to questionnaire logic (<code>lib/questions.js</code>), API routes, or Stripe flow.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Approach</h2>
+  <p>Copy design tokens from <code>index.html</code> into the preassessment app rather than extracting a shared CSS package. The two projects are separate deploys (static root site vs. Next.js app) and the token set changes rarely — a shared-package build step would be more setup than the problem justifies. Token drift risk is accepted; both are edited by the same team and the token source (<code>index.html</code>) is easy to diff against.</p>
+</section>
+
+<section>
+  <h2>Design</h2>
+
+  <h3>1. Token import — <code>preassessment/app/globals.css</code></h3>
+  <p>Append the <code>:root</code> custom-property block (lines 16–133 of <code>index.html</code>: surfaces, on-surface, primary/secondary/tertiary, outlines, typography scale, spacing scale, glow shadows) plus the Google Fonts import for Hanken Grotesk + JetBrains Mono, and the base reset/body rules (lines 138–159). Keep Tailwind's <code>@tailwind base/components/utilities</code> directives above it so Tailwind utility classes still work alongside the custom properties.</p>
+
+  <h3>2. Shared Nav + Footer — <code>preassessment/components/</code></h3>
+  <p>Two new components, ported from <code>index.html</code>'s nav and footer markup and CSS:</p>
+  <ul>
+    <li><strong>Nav.js</strong> — logo + "FinishLine" wordmark, wrapped in a link to <code>https://finishlinemsp.com</code>. No nav links — just the brand mark, keeping this a focused single-flow app while matching styling fidelity.</li>
+    <li><strong>Footer.js</strong> — same footer links and location string as the main site, for consistency.</li>
+  </ul>
+  <p>Both imported into <code>app/layout.js</code> so they wrap every route (questionnaire, offering, booking-confirmed) without per-page duplication.</p>
+
+  <h3>3. Recolor existing screens</h3>
+  <p><code>app/page.js</code> (questionnaire + offering screen, 308 lines) and <code>app/booking-confirmed/page.js</code>:</p>
+  <ul>
+    <li>Replace default/Tailwind-gray backgrounds and text with <code>var(--background)</code>, <code>var(--on-surface)</code>, <code>var(--surface-container)</code> etc.</li>
+    <li>Primary CTAs (Continue, package selection, checkout buttons) get <code>--primary-container</code> background with <code>--glow-cyan</code> box-shadow, matching the main site's cyan glow buttons.</li>
+    <li>Headings use <code>--ff-display</code>; data/label text (question numbers, price labels) uses <code>--ff-mono</code> per the main site's mono-for-data convention.</li>
+    <li>Progress indicator / section dividers use <code>--outline-variant</code> and <code>--surface-container-high</code> borders.</li>
+  </ul>
+  <p>No structural/layout changes beyond what's needed to hold the new classes — this is a palette and typography pass, not a rebuild.</p>
+</section>
+
+<section>
+  <h2>Files touched</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>File</th><th>Change</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">preassessment/app/globals.css</td><td>Add token block, fonts, reset</td></tr>
+      <tr><td class="mono">preassessment/components/Nav.js</td><td>New</td></tr>
+      <tr><td class="mono">preassessment/components/Footer.js</td><td>New</td></tr>
+      <tr><td class="mono">preassessment/app/layout.js</td><td>Wrap children in Nav/Footer</td></tr>
+      <tr><td class="mono">preassessment/app/page.js</td><td>Recolor, retypeset</td></tr>
+      <tr><td class="mono">preassessment/app/booking-confirmed/page.js</td><td>Recolor, retypeset</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Testing</h2>
+  <p>Manual only: <code>npm run dev</code> in <code>preassessment/</code>, walk through questionnaire → offering → checkout (Stripe test mode) → booking-confirmed, confirm no unstyled/default-Tailwind elements remain and nav/footer render on every screen.</p>
+</section>
+
+<section>
+  <h2>Out of scope</h2>
+  <p>Validation, DB persistence, email automation, calendar integration, analytics — each gets its own spec in a later sub-project.</p>
+</section>
+
+<footer class="doc-footer">
+  finishline / docs/superpowers/specs / 2026-07-12-preassessment-design-coherence-design.md
+</footer>
+
+</div>

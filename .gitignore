@@ -6,3 +6,10 @@
 .env
 .env*
 videos/
+
+# Build artifacts / deps — not part of the deployed static site
+node_modules/
+.next/
+.wrangler/
+.playwright-mcp/
+.DS_Store

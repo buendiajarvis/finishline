@@ -1,0 +1,12 @@
+node_modules
+.next
+functions
+wrangler.jsonc
+package.json
+package-lock.json
+.dev.vars
+vercel.json
+api
+.git
+.playwright-mcp
+.DS_Store

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinishLine — Under Attack? 24x7 Security Incident Hotline</title>
+<meta name="description" content="Under attack? Get immediate, 24x7 assistance from FinishLine's cyber risk experts. 24x7 incident hotline: +1 (415) 413-8655.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   FINISHLINE DESIGN TOKENS — from DESIGN.md
+   ============================================================ */
+:root {
+  /* Foundation */
+  --surface: #0c1324;
+  --surface-dim: #0c1324;
+  --surface-bright: #33394c;
+  --surface-container-lowest: #070d1f;
+  --surface-container-low: #151b2d;
+  --surface-container: #191f31;
+  --surface-container-high: #23293c;
+  --surface-container-highest: #2e3447;
+
+  /* On-surface (text) */
+  --on-surface: #dce1fb;
+  --on-surface-variant: #b9cacb;
+
+  /* Inverse */
+  --inverse-surface: #dce1fb;
+  --inverse-on-surface: #2a3043;
+
+  /* Outlines */
+  --outline: #849495;
+  --outline-variant: #3b494b;
+
+  /* Primary — Electric Cyan */
+  --surface-tint: #00dbe9;
+  --primary: #dbfcff;
+  --on-primary: #00363a;
+  --primary-container: #00f0ff;
+  --on-primary-container: #006970;
+  --inverse-primary: #006970;
+
+  /* Secondary — Steel Blue */
+  --secondary: #b7c8e1;
+  --on-secondary: #213145;
+  --secondary-container: #3a4a5f;
+  --on-secondary-container: #a9bad3;
+
+  /* Tertiary — Lavender */
+  --tertiary: #f5f5ff;
+  --on-tertiary: #283044;
+  --tertiary-container: #d1d9f3;
+  --on-tertiary-container: #575e75;
+
+  /* Error */
+  --error: #ffb4ab;
+  --on-error: #690005;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+
+  --background: #0c1324;
+  --on-background: #dce1fb;
+  --surface-variant: #2e3447;
+
+  /* Typography */
+  --ff-display: 'Hanken Grotesk', system-ui, sans-serif;
+  --ff-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --fs-display-lg: 48px;
+  --fs-display-lg-mobile: 32px;
+  --fs-headline-md: 24px;
+  --fs-body-md: 16px;
+  --fs-mono-label: 12px;
+  --fs-mono-data: 14px;
+
+  --lh-display-lg: 1.1;
+  --lh-headline-md: 1.3;
+  --lh-body-md: 1.6;
+  --lh-mono-label: 1.5;
+  --lh-mono-data: 1.4;
+
+  --ls-display-lg: -0.02em;
+  --ls-headline-md: -0.01em;
+  --ls-mono-label: 0.05em;
+  --ls-body-md: 0em;
+  --ls-mono-data: 0em;
+
+  /* Spacing — 4px base unit */
+  --unit: 4px;
+  --gutter: 24px;
+  --margin-desktop: 64px;
+  --margin-mobile: 20px;
+  --container-max: 1440px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Glow */
+  --glow-cyan: 0 0 15px rgba(0, 219, 233, 0.08);
+  --glow-cyan-strong: 0 0 30px rgba(0, 219, 233, 0.15);
+  --glow-cyan-text: 0 0 8px rgba(0, 240, 255, 0.3);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: var(--ff-display);
+  font-size: var(--fs-body-md);
+  font-weight: 400;
+  line-height: var(--lh-body-md);
+  letter-spacing: var(--ls-body-md);
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+}
+
+.section {
+  padding: var(--space-24) 0;
+  position: relative;
+  z-index: 1;
+}
+
+.section-label {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  line-height: var(--lh-mono-label);
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+  display: block;
+}
+
+/* ============================================================
+   NAVIGATION — Glassmorphism Header
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(12, 19, 36, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.nav-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.nav-logo {
+  width: 8px;
+  height: 8px;
+  background: var(--primary-container);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+.nav-name {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  font-weight: 500;
+  color: var(--on-surface);
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary-container);
+}
+
+.nav-links a.current {
+  color: var(--primary-container);
+}
+
+.nav-cta {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  padding: var(--space-2) var(--space-4);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: box-shadow 0.2s ease;
+}
+
+.nav-cta:hover {
+  box-shadow: var(--glow-cyan-strong);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.ua-hero {
+  padding-top: calc(56px + var(--space-24));
+  padding-bottom: var(--space-16);
+  position: relative;
+  overflow: hidden;
+}
+
+.ua-hero::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -8%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(0, 219, 233, 0.10), transparent 60%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: var(--fs-display-lg);
+  font-weight: 700;
+  line-height: var(--lh-display-lg);
+  letter-spacing: var(--ls-display-lg);
+  color: var(--on-surface);
+  margin-top: var(--space-5);
+  max-width: 720px;
+}
+
+.hero-title span {
+  color: var(--primary-container);
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+  max-width: 560px;
+  margin-top: var(--space-6);
+}
+
+/* ============================================================
+   PULSE DOT
+   ============================================================ */
+.panel-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--primary-container);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(0, 240, 255, 0.5); }
+  50% { opacity: 0.4; box-shadow: 0 0 12px rgba(0, 240, 255, 0.8); }
+}
+
+/* ============================================================
+   HOTLINE
+   ============================================================ */
+.hotline-panel {
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  padding: clamp(var(--space-12), 5vw, var(--space-16)) clamp(var(--space-8), 4vw, var(--space-16));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  position: relative;
+}
+
+.hotline-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: var(--primary-container);
+}
+
+.hotline-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-transform: uppercase;
+}
+
+.hotline-number {
+  font-family: var(--ff-mono);
+  font-size: clamp(34px, 6.5vw, 68px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: 0;
+  color: var(--primary-container);
+  text-shadow: var(--glow-cyan-text);
+  text-decoration: none;
+  display: inline-block;
+  width: fit-content;
+}
+
+.hotline-number:hover {
+  text-decoration: none;
+  filter: brightness(1.15);
+}
+
+.hotline-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.hotline-cta {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-data);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-primary);
+  background: var(--primary-container);
+  padding: var(--space-4) var(--space-8);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: box-shadow 0.2s ease;
+}
+
+.hotline-cta:hover {
+  box-shadow: var(--glow-cyan-strong);
+}
+
+.hotline-availability {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-transform: uppercase;
+}
+
+.hotline-note {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--on-surface-variant);
+  max-width: 680px;
+  border-left: 2px solid var(--outline-variant);
+  padding-left: var(--space-4);
+}
+
+/* ============================================================
+   NOTES
+   ============================================================ */
+.note-card {
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  padding: var(--space-8);
+  position: relative;
+}
+
+.note-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: var(--primary-container);
+}
+
+.note-card h3 {
+  font-family: var(--ff-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--on-surface);
+  line-height: 1.3;
+  margin-bottom: var(--space-4);
+}
+
+.note-card p {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  line-height: 1.6;
+  max-width: 720px;
+}
+
+/* ============================================================
+   QUIET CTA
+   ============================================================ */
+.quiet-cta {
+  border-top: 1px solid var(--outline-variant);
+  padding: var(--space-16) 0;
+}
+
+.quiet-cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.quiet-cta h2 {
+  font-family: var(--ff-display);
+  font-size: var(--fs-headline-md);
+  font-weight: 600;
+  line-height: var(--lh-headline-md);
+  letter-spacing: var(--ls-headline-md);
+  color: var(--on-surface);
+}
+
+.quiet-cta a {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--surface-tint);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.quiet-cta a:hover {
+  color: var(--primary-container);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  border-top: 1px solid var(--outline-variant);
+  background: var(--surface-container-lowest);
+  padding: var(--space-10) 0;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.footer-brand {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 500;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.footer-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--primary-container);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  list-style: none;
+}
+
+.footer-links a {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  font-weight: 400;
+  letter-spacing: var(--ls-mono-label);
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary-container);
+}
+
+.footer-location {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-mono-label);
+  color: var(--outline);
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root {
+    --fs-display-lg: 36px;
+  }
+
+  .container {
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --fs-display-lg: 32px;
+  }
+
+  .container {
+    padding: 0 var(--margin-mobile);
+  }
+
+  .nav-links { display: none; }
+
+  .ua-hero { padding-top: calc(56px + var(--space-12)); }
+
+  .footer-inner { flex-direction: column; gap: var(--space-6); text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: var(--space-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel-dot { animation: none; }
+}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D9G7BHTCJ8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D9G7BHTCJ8');
+</script>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo"></div>
+      <span class="nav-name">FinishLine</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#capabilities">Capabilities</a></li>
+      <li><a href="index.html#approach">Approach</a></li>
+      <li><a href="index.html#intelligence">Intelligence</a></li>
+      <li><a href="under-attack.html" class="current">Under attack</a></li>
+    </ul>
+    <a href="index.html#engage" class="nav-cta">Engage</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="ua-hero">
+  <div class="container">
+    <div class="hero-eyebrow">SECTION 01 // SECURITY INCIDENT HOTLINES</div>
+    <h1 class="hero-title">Under attack? <span>Get immediate help.</span></h1>
+    <p class="hero-subtitle">
+      Get immediate, 24x7 assistance from FinishLine's cyber risk experts using
+      the hotline below. One call puts a senior incident responder on the line —
+      day or night, 365 days a year.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     HOTLINE
+     ============================================================ -->
+<section class="section" id="hotline">
+  <div class="container">
+    <span class="section-label">SECTION 02 // 24X7 CYBER INCIDENT HOTLINE</span>
+    <div class="hotline-panel">
+      <div class="hotline-meta">
+        <span class="panel-dot" aria-hidden></span>
+        <span>Cyber Incident Hotline — United States</span>
+      </div>
+      <a class="hotline-number" href="tel:+14154138655">+1 (415) 413-8655</a>
+      <div class="hotline-actions">
+        <a class="hotline-cta" href="tel:+14154138655">Call now</a>
+        <span class="hotline-availability">Available 24x7 / 365</span>
+      </div>
+      <p class="hotline-note">
+        Please note this hotline is not able to support individual queries around
+        breach notification, credit or identity monitoring — please call the
+        dedicated number outlined in your notification letter.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     NOTES
+     ============================================================ -->
+<section class="section" id="notices">
+  <div class="container">
+    <span class="section-label">SECTION 03 // IMPORTANT</span>
+    <div class="note-card">
+      <h3>Breach letter inquiries</h3>
+      <p>
+        If you received a notification letter regarding a data incident, please
+        call the number in your letter. The cyber incident hotline is unable to
+        answer questions about the letter you received or help with credit or
+        identity monitoring inquiries.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     QUIET CTA
+     ============================================================ -->
+<section class="quiet-cta">
+  <div class="container">
+    <div class="quiet-cta-inner">
+      <h2>Not under attack right now?</h2>
+      <a href="index.html#capabilities">See Security &amp; Governance →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-dot"></div>
+        FINISHLINE
+      </div>
+      <ul class="footer-links">
+        <li><a href="index.html#capabilities">Capabilities</a></li>
+        <li><a href="under-attack.html">Under attack</a></li>
+        <li><a href="/msp/contact">Contact</a></li>
+      </ul>
+      <span class="footer-location">San Francisco  ·  New York  ·  London  ·  Taipei  ·  Manila</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
