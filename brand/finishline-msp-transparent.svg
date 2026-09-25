@@ -10,8 +10,8 @@
     </filter>
   </defs>
   <!-- transparent — no background rect -->
-  <!-- mark: 10px live square · #00f0ff -->
-  <rect x="12" y="11" width="10" height="10" fill="#00f0ff" filter="url(#fl-glow)"/>
+  <!-- mark: 10px live square · #d1ea99 -->
+  <rect x="12" y="11" width="10" height="10" fill="#d1ea99" filter="url(#fl-glow)"/>
   <!-- lockup: JetBrains Mono, 14px, tracking 0.05em, case preserved exactly -->
-  <text x="30" y="21.5" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" letter-spacing="0.7" fill="#dce1fb" style="text-transform:none">finishline <tspan fill="#00dbe9">|</tspan> MSP</text>
+  <text x="30" y="21.5" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" letter-spacing="0.7" fill="#dce1fb" style="text-transform:none">finishline <tspan fill="#d1ea99">|</tspan> MSP</text>
 </svg>
