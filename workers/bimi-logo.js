@@ -1,0 +1,23 @@
+// Serves the BIMI logo at /finishline-bimi-logo.svg.
+// The apex domain is routed to the `finishline-msp-landing` Worker, whose
+// source isn't in this repo — so this micro-worker owns just the BIMI path
+// via a more-specific Worker route. SVG must stay byte-identical to
+// /finishline-bimi-logo.svg (SVG Tiny PS, text converted to paths).
+const SVG = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny-ps" viewBox="0 0 64 64">
+  <title>finishline | MSP</title>
+  <rect width="64" height="64" rx="14" fill="#111c21"/>
+  <path d="M18.52 24.18H21.87V22.46Q21.87 19.59 22.48 18.17Q23.09 16.75 24.74 15.86Q26.38 14.97 28.89 14.97Q31.47 14.97 33.94 15.74L33.13 19.95Q31.69 19.61 30.35 19.61Q29.04 19.61 28.47 20.22Q27.9 20.83 27.9 22.57V24.18H32.42V28.93H27.9V47H21.87V28.93H18.52Z" fill="#d1ea99"/>
+  <rect x="45" y="41" width="6" height="6" rx="1" fill="#d1ea99"/>
+</svg>`;
+
+export default {
+  async fetch() {
+    return new Response(SVG, {
+      headers: {
+        'content-type': 'image/svg+xml',
+        'cache-control': 'public, max-age=86400',
+      },
+    });
+  },
+};
